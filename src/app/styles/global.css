@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #131417;
+  --color-secondary: #1e1f25;
+  --color-tertiary: #2f2f2f;
+}
+
+body {
+  background-color: black;
+}
+
+button {
+  cursor: pointer;
+}
+

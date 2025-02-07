@@ -1,35 +1,57 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 import { Header } from './Header';
-import { Editor } from '@widgets/editor';
+import { Settings } from './Settings';
+import { Editor } from './Editor';
+import { generateOutput } from '../lib';
 
 export const Edit = () => {
-  const [html, setHtml] = useState('');
-  const [css, setCss] = useState('');
-  const [js, setJs] = useState('');
-  const [output, setOutput] = useState('');
+  const [editorState, setEditorState] = useState({
+    html: '',
+    css: '',
+    js: '',
+    output: '',
+  });
+  const [isSettingsOpen, setIsSettingsOpen] = useState(true);
 
-  const handleExecute = () => {
-    const output = `
-      <html>
-        <head>
-          <style>${css}</style>
-        </head>
-        <body>
-          ${html}
-          <script>${js}</script>
-        </body>
-      </html>
-    `;
-
-    setOutput(output);
+  const handleChange = (field: string, value: string) => {
+    setEditorState((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
   };
+
+  const handleExecute = useCallback(() => {
+    const output = generateOutput(
+      editorState.html,
+      editorState.css,
+      editorState.js
+    );
+
+    setEditorState((prevState) => ({ ...prevState, output }));
+  }, [editorState.html, editorState.css, editorState.js]);
 
   return (
     <div className='flex flex-col h-screen text-white bg-black'>
-      <Header onExecute={handleExecute} />
+      <Settings
+        isSettingsOpen={isSettingsOpen}
+        onSettingsClose={() => setIsSettingsOpen(false)}
+      />
 
-      <Editor output={output} onHtmlChange={setHtml} onCssChange={setCss} onJsChange={setJs} />
+      <Header
+        onExecute={handleExecute}
+        onSettingsOpen={() => setIsSettingsOpen(true)}
+      />
+
+      <Editor
+        html={editorState.html}
+        css={editorState.css}
+        js={editorState.js}
+        onHtmlChange={(value) => handleChange('html', value)}
+        onCssChange={(value) => handleChange('css', value)}
+        onJsChange={(value) => handleChange('js', value)}
+        output={editorState.output}
+      />
     </div>
   );
 };

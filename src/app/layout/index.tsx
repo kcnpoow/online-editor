@@ -13,11 +13,11 @@ export const Layout = () => {
   };
 
   return (
-    <div className='flex min-h-dvh text-white'>
+    <div className='flex min-h-screen text-white'>
       <Sidebar isNavbarOpened={isNavbarOpened} />
 
       <div className='flex flex-col grow'>
-        <Header isNavbarOpened={isNavbarOpened} setIsNavbarOpened={toggleNavbar} />
+        <Header isNavbarOpened={isNavbarOpened} toggleNavbar={toggleNavbar} />
 
         <main className='grow px-4 bg-primary'>
           <Outlet />

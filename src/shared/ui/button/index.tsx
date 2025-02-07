@@ -9,7 +9,8 @@ export const Button = ({ variant, className, ...props }: Props) => {
   return (
     <button
       className={cn('py-2 px-4 whitespace-nowrap rounded-sm', className, {
-        ['text-black bg-[#70CC7C] hover:text-white hover:bg-[#468A4D]']: variant === 'primary',
+        ['text-black bg-[#70CC7C] hover:text-white hover:bg-[#468A4D]']:
+          variant === 'primary',
         ['bg-[#26282F] hover:bg-[#454856]']: variant === 'secondary',
       })}
       {...props}

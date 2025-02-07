@@ -1,0 +1,39 @@
+import cn from 'classnames';
+
+type Props = {
+  isNavbarOpened: boolean;
+  toggleNavbar: () => void;
+};
+
+export const NavbarToggler = ({ isNavbarOpened, toggleNavbar }: Props) => {
+  return (
+    <button
+      className='relative pl-2 pr-3.5 h-full bg-[#5A5F73] rounded-sm md:hidden'
+      onClick={toggleNavbar}
+    >
+      <div
+        className={cn(
+          'mb-1 h-0.5 bg-white rounded-sm',
+          isNavbarOpened ? 'w-2.5' : 'w-1.5'
+        )}
+      ></div>
+      <div
+        className={cn(
+          'mb-1 h-0.5 bg-white rounded-sm',
+          isNavbarOpened ? 'w-1.5' : 'w-2.5'
+        )}
+      ></div>
+      <div className='w-4.5 h-0.5 bg-white rounded-sm'></div>
+
+      <img
+        className={cn(
+          'absolute top-2.5 right-2 size-3.5 transition-transform',
+          {
+            '-scale-100': isNavbarOpened,
+          }
+        )}
+        src='images/arrow.svg'
+      />
+    </button>
+  );
+};

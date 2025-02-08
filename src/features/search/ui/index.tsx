@@ -1,4 +1,4 @@
-import { Input } from '@shared/ui/input';
+import { Input } from '@shared/ui/Input';
 
 export const Search = () => {
   return (

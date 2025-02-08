@@ -31,7 +31,7 @@ export const Editor = ({
     <PanelGroup direction='vertical'>
       <Panel minSize={30}>
         <PanelGroup direction='horizontal'>
-          <Panel minSize={5}>
+          <Panel minSize={10}>
             <CodeEditor
               title='HTML'
               language={htmlLang()}
@@ -42,7 +42,7 @@ export const Editor = ({
 
           <CustomPanelResizeHandle direction='vertical' />
 
-          <Panel minSize={5}>
+          <Panel minSize={10}>
             <CodeEditor
               title='CSS'
               language={cssLang()}
@@ -53,7 +53,7 @@ export const Editor = ({
 
           <CustomPanelResizeHandle direction='vertical' />
 
-          <Panel minSize={5}>
+          <Panel minSize={10}>
             <CodeEditor
               title='JS'
               language={javascriptLang()}

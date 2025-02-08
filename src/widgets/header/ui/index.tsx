@@ -1,6 +1,6 @@
 import { NavbarToggler } from './NavbarToggler';
 import { Search } from '@features/search';
-import { Button } from '@shared/ui/button';
+import { Button } from '@shared/ui/Button';
 
 type Props = {
   isNavbarOpened: boolean;

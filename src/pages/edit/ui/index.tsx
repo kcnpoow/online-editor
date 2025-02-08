@@ -12,14 +12,7 @@ export const Edit = () => {
     js: '',
     output: '',
   });
-  const [isSettingsOpen, setIsSettingsOpen] = useState(true);
-
-  const handleChange = (field: string, value: string) => {
-    setEditorState((prevState) => ({
-      ...prevState,
-      [field]: value,
-    }));
-  };
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const handleExecute = useCallback(() => {
     const output = generateOutput(
@@ -30,6 +23,13 @@ export const Edit = () => {
 
     setEditorState((prevState) => ({ ...prevState, output }));
   }, [editorState.html, editorState.css, editorState.js]);
+
+  const handleChange = (field: string, value: string) => {
+    setEditorState((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
 
   return (
     <div className='flex flex-col h-screen text-white bg-black'>

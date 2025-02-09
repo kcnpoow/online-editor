@@ -4,16 +4,17 @@ import styles from './style.module.css';
 
 type Props = InputHTMLAttributes<HTMLInputElement>;
 
-export const Switch = ({ id, value, onChange }: Props) => {
+export const Switch = ({ checked, id, onChange }: Props) => {
   return (
     <div className='relative inline-block'>
       <input
         id={id}
         className='hidden'
         type='checkbox'
-        value={value}
         onChange={onChange}
+        checked={checked}
       />
+
       <label htmlFor={id} className={styles.switch}></label>
     </div>
   );

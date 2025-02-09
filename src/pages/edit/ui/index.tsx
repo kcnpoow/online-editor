@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react';
 
 import { Header } from './Header';
-import { Settings } from './Settings';
 import { Editor } from './Editor';
 import { generateOutput } from '../lib';
+import { Settings } from '@widgets/settings';
 
 export const Edit = () => {
   const [editorState, setEditorState] = useState({

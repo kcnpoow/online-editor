@@ -11,7 +11,7 @@ export const Header = ({ onExecute, onSettingsOpen }: Props) => {
       <span className='text-xl font-semibold'>Untitled</span>
 
       <div className='flex gap-x-2'>
-        <Button variant='secondary' onClick={onSettingsOpen}>
+        <Button variant='tertiary' onClick={onSettingsOpen}>
           Settings
         </Button>
 

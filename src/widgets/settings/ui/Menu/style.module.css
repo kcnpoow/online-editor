@@ -1,0 +1,14 @@
+.menuItem {
+  display: block;
+  padding-left: 1rem;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.menuItemActive {
+  border-left: 2px solid var(--color-success);
+}
+
+.menuItem:hover {
+  background-color: #1d1e22;
+}

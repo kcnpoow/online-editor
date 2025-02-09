@@ -1,4 +1,4 @@
-import { MouseEvent, ReactNode, useRef } from 'react';
+import { MouseEvent, ReactNode, useRef, useEffect } from 'react';
 import cn from 'classnames';
 
 import { ModalHeader } from './Header';
@@ -9,9 +9,10 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
+  className?: string
 };
 
-const Modal = ({ isOpen, onClose, children }: Props) => {
+const Modal = ({ isOpen, onClose, children, className }: Props) => {
   const $backdrop = useRef(null);
 
   const handleBackdropClick = (e: MouseEvent<HTMLDivElement>) => {
@@ -20,12 +21,26 @@ const Modal = ({ isOpen, onClose, children }: Props) => {
     }
   };
 
+  const handleEscapePress = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleEscapePress);
+
+    return () => {
+      document.removeEventListener('keydown', handleEscapePress);
+    };
+  }, []);
   return (
     <div
       ref={$backdrop}
       className={cn(
         'fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/75',
-        isOpen ? 'visible' : 'invisible'
+        className,
+        isOpen ? '' : 'hidden'
       )}
       onClick={handleBackdropClick}
     >

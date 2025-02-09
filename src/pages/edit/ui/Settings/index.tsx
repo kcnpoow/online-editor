@@ -9,8 +9,8 @@ type Props = {
 
 export const Settings = ({ isSettingsOpen, onSettingsClose }: Props) => {
   return (
-    <Modal isOpen={isSettingsOpen} onClose={onSettingsClose}>
-      <Modal.Header title='Draft Settings'></Modal.Header>
+    <Modal className='text-xl' isOpen={isSettingsOpen} onClose={onSettingsClose}>
+      <Modal.Header title='Draft Settings' />
 
       <Modal.Body>
         <label htmlFor='auto-update'>Auto Update</label>

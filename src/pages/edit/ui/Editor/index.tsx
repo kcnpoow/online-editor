@@ -5,7 +5,6 @@ import { javascript as javascriptLang } from '@codemirror/lang-javascript';
 
 import { CustomPanelResizeHandle } from './CustomPanelResizeHandle';
 import { CodeEditor } from './CodeEditor';
-import { Output } from './Output';
 import './style.css';
 
 type Props = {
@@ -67,7 +66,7 @@ export const Editor = ({
       <CustomPanelResizeHandle direction='horizontal' />
 
       <Panel className='bg-white'>
-        <Output code={output} />
+        <iframe width='100%' height='100%' srcDoc={output} />
       </Panel>
     </PanelGroup>
   );

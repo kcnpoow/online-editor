@@ -1,7 +1,5 @@
-import cn from 'classnames';
-
-import style from './style.module.css';
 import { Tabs } from '../../model';
+import { MenuItem } from './MenuItem';
 
 type Props = {
   currentTab: Tabs;
@@ -10,23 +8,22 @@ type Props = {
 
 export const Menu = ({ currentTab, setCurrentTab }: Props) => {
   return (
-    <nav className='flex py-4 md:block'>
-      <div
-        className={cn(style.menuItem, {
-          [style.menuItemActive]: currentTab === 'behavior',
-        })}
-        onClick={() => setCurrentTab('behavior')}
-      >
-        Behavior
-      </div>
-      <div
-        className={cn(style.menuItem, {
-          [style.menuItemActive]: currentTab === 'privacy',
-        })}
-        onClick={() => setCurrentTab('privacy')}
-      >
-        Privacy
-      </div>
+    <nav className='py-4 max-md:mx-4  max-md:border-b-2 max-md:border-secondary'>
+      <ul className='flex gap-x-4 md:block'>
+        <MenuItem
+          isActive={currentTab === 'behavior'}
+          onClick={() => setCurrentTab('behavior')}
+        >
+          Behavior
+        </MenuItem>
+
+        <MenuItem
+          isActive={currentTab === 'privacy'}
+          onClick={() => setCurrentTab('privacy')}
+        >
+          Privacy
+        </MenuItem>
+      </ul>
     </nav>
   );
 };

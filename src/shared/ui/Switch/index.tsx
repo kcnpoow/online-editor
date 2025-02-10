@@ -1,21 +1,26 @@
-import { InputHTMLAttributes } from 'react';
+import { InputHTMLAttributes, useRef } from 'react';
 
 import styles from './style.module.css';
 
 type Props = InputHTMLAttributes<HTMLInputElement>;
 
-export const Switch = ({ checked, id, onChange }: Props) => {
+export const Switch = ({ checked, onChange }: Props) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
   return (
-    <div className='relative inline-block'>
+    <div className='relative inline-block select-none'>
       <input
-        id={id}
+        ref={inputRef}
         className='hidden'
         type='checkbox'
         onChange={onChange}
         checked={checked}
       />
 
-      <label htmlFor={id} className={styles.switch}></label>
+      <label
+        onClick={() => inputRef?.current?.click()}
+        className={styles.switch}
+      />
     </div>
   );
 };

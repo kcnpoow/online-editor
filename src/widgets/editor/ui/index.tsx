@@ -1,20 +1,56 @@
+import { useState } from 'react';
 import { PanelGroup, Panel } from 'react-resizable-panels';
 import { html } from '@codemirror/lang-html';
 import { css } from '@codemirror/lang-css';
 import { javascript } from '@codemirror/lang-javascript';
+import cn from 'classnames';
 
+import { Tab } from './Tab';
+import { EditorTabs } from '../model';
 import { CustomPanelResizeHandle } from './CustomPanelResizeHandle';
-import { CodeEditor } from '@shared/ui/CodeEditor';
+import { CodeEditor } from './CodeEditor';
 import { useEdit } from '@shared/hooks/useEdit';
 
 export const Editor = () => {
+  const [currentEditor, setCurrentEditor] = useState<EditorTabs>('html');
+  const [isResultActive, setIsResultActive] = useState(true);
   const { editorState, onEditorStateChange } = useEdit();
 
   return (
-    <PanelGroup direction='vertical' className='[&_.cm-editor]:h-full'>
+    <PanelGroup direction='vertical'>
+      <ul className='flex gap-x-0.5 px-2 pt-2 md:hidden'>
+        <Tab
+          onClick={() => setCurrentEditor('html')}
+          isActive={currentEditor === 'html'}
+        >
+          HTML
+        </Tab>
+        <Tab
+          onClick={() => setCurrentEditor('css')}
+          isActive={currentEditor === 'css'}
+        >
+          CSS
+        </Tab>
+        <Tab
+          onClick={() => setCurrentEditor('js')}
+          isActive={currentEditor === 'js'}
+        >
+          JS
+        </Tab>
+        <Tab
+          onClick={() => setIsResultActive((prevState) => !prevState)}
+          isActive={isResultActive}
+        >
+          Result
+        </Tab>
+      </ul>
+
       <Panel minSize={30}>
         <PanelGroup direction='horizontal'>
-          <Panel minSize={10}>
+          <Panel
+            className={cn({ 'max-md:hidden': currentEditor !== 'html' })}
+            minSize={10}
+          >
             <CodeEditor
               title='HTML'
               language={html()}
@@ -25,7 +61,10 @@ export const Editor = () => {
 
           <CustomPanelResizeHandle direction='vertical' />
 
-          <Panel minSize={10}>
+          <Panel
+            className={cn({ 'max-md:hidden': currentEditor !== 'css' })}
+            minSize={10}
+          >
             <CodeEditor
               title='CSS'
               language={css()}
@@ -36,7 +75,10 @@ export const Editor = () => {
 
           <CustomPanelResizeHandle direction='vertical' />
 
-          <Panel minSize={10}>
+          <Panel
+            className={cn({ 'max-md:hidden': currentEditor !== 'js' })}
+            minSize={10}
+          >
             <CodeEditor
               title='JS'
               language={javascript()}
@@ -49,7 +91,7 @@ export const Editor = () => {
 
       <CustomPanelResizeHandle direction='horizontal' />
 
-      <Panel className='bg-white'>
+      <Panel className={cn('bg-white', { 'max-md:hidden': !isResultActive })}>
         <iframe width='100%' height='100%' srcDoc={editorState.output} />
       </Panel>
     </PanelGroup>

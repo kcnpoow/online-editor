@@ -13,15 +13,15 @@ export const Header = ({ onSettingsOpen }: Props) => {
       <span className='text-xl font-semibold'>Untitled</span>
 
       <div className='flex gap-x-2'>
-        <Button variant='tertiary' onClick={onSettingsOpen}>
-          Settings
-        </Button>
-
         {!editorSettings.autoUpdate && (
           <Button variant='tertiary' onClick={onExecute}>
             Run
           </Button>
         )}
+        
+        <Button variant='tertiary' onClick={onSettingsOpen}>
+          Settings
+        </Button>
       </div>
     </header>
   );

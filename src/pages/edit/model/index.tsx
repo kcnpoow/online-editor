@@ -13,11 +13,11 @@ export type EditContextValues = {
   editorState: EditorState;
   editorSettings: EditorSettings;
   onEditorStateChange: (field: EditorStateFields, value: string) => void;
-  onExecute: () => void;
   onEditorSettingsChange: <K extends keyof EditorSettings>(
     field: K,
     value: EditorSettings[K]
   ) => void;
+  onExecute: () => void;
 };
 
 type Props = { children: ReactNode };
@@ -54,13 +54,6 @@ export const EditProvider = ({ children }: Props) => {
     });
   };
 
-  const handleExecute = () => {
-    setEditorState((prevState) => ({
-      ...prevState,
-      output: generateOutput(prevState.html, prevState.css, prevState.js),
-    }));
-  };
-
   const handleEditorSettingsChange = <K extends keyof EditorSettings>(
     field: K,
     value: EditorSettings[K]
@@ -71,14 +64,21 @@ export const EditProvider = ({ children }: Props) => {
     }));
   };
 
+  const handleExecute = () => {
+    setEditorState((prevState) => ({
+      ...prevState,
+      output: generateOutput(prevState.html, prevState.css, prevState.js),
+    }));
+  };
+
   return (
     <EditContext.Provider
       value={{
         editorState,
         editorSettings,
         onEditorStateChange: handleEditorStateChange,
-        onExecute: handleExecute,
         onEditorSettingsChange: handleEditorSettingsChange,
+        onExecute: handleExecute,
       }}
     >
       {children}

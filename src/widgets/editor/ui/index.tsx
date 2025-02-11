@@ -4,7 +4,7 @@ import { css } from '@codemirror/lang-css';
 import { javascript } from '@codemirror/lang-javascript';
 
 import { CustomPanelResizeHandle } from './CustomPanelResizeHandle';
-import { CodeEditor } from './CodeEditor';
+import { CodeEditor } from '@shared/ui/CodeEditor';
 import { useEdit } from '@shared/hooks/useEdit';
 
 export const Editor = () => {

@@ -18,7 +18,7 @@ export const Header = ({ onSettingsOpen }: Props) => {
         </Button>
 
         {!editorSettings.autoUpdate && (
-          <Button variant='primary' onClick={onExecute}>
+          <Button variant='tertiary' onClick={onExecute}>
             Run
           </Button>
         )}

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { Menu } from './Menu';
-import { Behavior } from './Tabs';
+import { Behavior, Privacy } from './Tabs';
 import type { Tabs } from '../model';
 import { Button } from '@shared/ui/Button';
 import { Modal } from '@shared/ui/modal';
@@ -18,6 +18,8 @@ export const Settings = ({ isSettingsOpen, onSettingsClose }: Props) => {
     switch (currentTab) {
       case 'behavior':
         return <Behavior />;
+      case 'privacy':
+        return <Privacy />;
     }
   };
 

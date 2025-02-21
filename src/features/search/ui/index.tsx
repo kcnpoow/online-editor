@@ -5,9 +5,10 @@ import { Input } from '@shared/ui/Input';
 export const Search = () => {
   return (
     <Input
-      className='max-w-72 h-full py-2 font-semibold'
+      className='h-full font-semibold text-sm py-0'
+      containerClassName='w-full h-full max-w-80'
       placeholder='Search Draft...'
-      icon={<FaSearch color='' />}
+      icon={<FaSearch />}
     />
   );
 };

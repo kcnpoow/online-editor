@@ -1,7 +1,7 @@
 import { FaLock } from 'react-icons/fa';
 
 import { SettingsRow } from './SettingsRow';
-import { Switch } from '@shared/ui/switch';
+import { Switch } from '@shared/ui/Switch';
 import { Input } from '@shared/ui/Input';
 import { useEdit } from '@shared/hooks/useEdit';
 

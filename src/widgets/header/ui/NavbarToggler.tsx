@@ -8,7 +8,7 @@ type Props = {
 export const NavbarToggler = ({ isNavbarOpened, toggleNavbar }: Props) => {
   return (
     <button
-      className='relative pl-2 pr-3.5 h-full bg-[#5A5F73] rounded-sm md:hidden'
+      className='relative pl-1.5 pr-3 h-full bg-[#5A5F73] rounded-sm md:hidden'
       onClick={toggleNavbar}
     >
       <div
@@ -27,7 +27,7 @@ export const NavbarToggler = ({ isNavbarOpened, toggleNavbar }: Props) => {
 
       <img
         className={cn(
-          'absolute top-2.5 right-2 size-3.5 transition-transform',
+          'absolute top-2 right-1.5 size-3.5 transition-transform',
           {
             '-scale-100': isNavbarOpened,
           }

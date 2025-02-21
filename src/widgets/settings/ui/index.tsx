@@ -4,7 +4,7 @@ import { Menu } from './Menu';
 import { Behavior, Privacy } from './Tabs';
 import type { Tabs } from '../model';
 import { Button } from '@shared/ui/Button';
-import { Modal } from '@shared/ui/modal';
+import { Modal } from '@shared/ui/Modal';
 
 type Props = {
   isSettingsOpen: boolean;
@@ -38,7 +38,7 @@ export const Settings = ({ isSettingsOpen, onSettingsClose }: Props) => {
       </Modal.Body>
 
       <Modal.Footer className='flex justify-end'>
-        <Button variant='primary' onClick={onSettingsClose}>
+        <Button color='primary' onClick={onSettingsClose}>
           Close
         </Button>
       </Modal.Footer>

@@ -1,5 +1,5 @@
 import { SettingsRow } from './SettingsRow';
-import { Switch } from '@shared/ui/Switch';
+import { Switch } from '@shared/ui/Swtich';
 
 import { useEdit } from '@shared/hooks/useEdit';
 

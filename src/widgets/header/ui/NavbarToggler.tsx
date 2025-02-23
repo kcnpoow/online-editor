@@ -27,7 +27,7 @@ export const NavbarToggler = ({ isNavbarOpened, toggleNavbar }: Props) => {
 
       <img
         className={cn(
-          'absolute top-2 right-1.5 size-3.5 transition-transform',
+          'absolute top-2.5 right-1.5 size-3.5 transition-transform',
           {
             '-scale-100': isNavbarOpened,
           }

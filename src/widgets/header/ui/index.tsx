@@ -20,11 +20,11 @@ export const Header = ({ isNavbarOpened, toggleNavbar }: Props) => {
       <Search />
 
       <div className='flex gap-x-2 ml-auto'>
-        <Button color='primary' as={Link} to='/signup' adaptive>
+        <Button color='primary' as={Link} to='/signup'>
           Sign Up
         </Button>
 
-        <Button color='secondary' as={Link} to='/signin' adaptive>
+        <Button color='secondary' as={Link} to='/signin'>
           Sign In
         </Button>
       </div>

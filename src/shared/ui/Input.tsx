@@ -34,7 +34,7 @@ export const Input = ({
             'pl-10': icon,
           }
         )}
-        placeholder={label ? '' : placeholder}
+        placeholder={label ? ' ' : placeholder}
         id={id}
         {...props}
       />

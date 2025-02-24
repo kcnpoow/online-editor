@@ -7,5 +7,9 @@ type Props = {
 };
 
 export const ModalBody = ({ children, className }: Props) => {
-  return <div className={cn('grow overflow-y-auto', className)}>{children}</div>;
+  return (
+    <main className={cn('grow overflow-y-auto', className)}>
+      {children}
+    </main>
+  );
 };

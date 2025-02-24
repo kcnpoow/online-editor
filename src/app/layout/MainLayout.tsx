@@ -5,7 +5,7 @@ import { Header } from '@widgets/header';
 import { Sidebar } from '@widgets/sidebar';
 import { Footer } from '@widgets/footer/ui';
 
-export const Layout = () => {
+export const MainLayout = () => {
   const [isNavbarOpened, setIsNavbarOpened] = useState(false);
 
   const toggleNavbar = () => {

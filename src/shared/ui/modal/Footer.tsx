@@ -7,5 +7,7 @@ type Props = {
 };
 
 export const ModalFooter = ({ children, className }: Props) => {
-  return <div className={cn('p-3 bg-secondary', className)}>{children}</div>;
+  return (
+    <footer className={cn('p-3 bg-secondary', className)}>{children}</footer>
+  );
 };

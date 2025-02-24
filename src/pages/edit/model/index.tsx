@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useState, useCallback } from 'react';
 
 import { generateOutput } from '../lib';
 
@@ -7,6 +7,7 @@ type EditorState = Record<EditorStateFields, string> & { output: string };
 
 type EditorSettings = {
   autoUpdate: boolean;
+  isPrivate: boolean;
 };
 
 export type EditContextValues = {
@@ -36,40 +37,44 @@ export const EditProvider = ({ children }: Props) => {
 
   const [editorSettings, setEditorSettings] = useState<EditorSettings>({
     autoUpdate: true,
+    isPrivate: false,
   });
 
-  const handleEditorStateChange = (field: EditorStateFields, value: string) => {
-    setEditorState((prevState) => {
-      const newState = { ...prevState, [field]: value };
+  const handleEditorStateChange = useCallback(
+    (field: EditorStateFields, value: string) => {
+      setEditorState((prevState) => {
+        const newState = { ...prevState, [field]: value };
 
-      if (editorSettings.autoUpdate) {
-        newState.output = generateOutput(
-          newState.html,
-          newState.css,
-          newState.js
-        );
-      }
+        if (editorSettings.autoUpdate) {
+          newState.output = generateOutput(
+            newState.html,
+            newState.css,
+            newState.js
+          );
+        }
 
-      return newState;
-    });
-  };
+        return newState;
+      });
+    },
+    [editorSettings.autoUpdate]
+  );
 
-  const handleEditorSettingsChange = <K extends keyof EditorSettings>(
-    field: K,
-    value: EditorSettings[K]
-  ) => {
-    setEditorSettings((prevState) => ({
-      ...prevState,
-      [field]: value,
-    }));
-  };
+  const handleEditorSettingsChange = useCallback(
+    <K extends keyof EditorSettings>(field: K, value: EditorSettings[K]) => {
+      setEditorSettings((prevState) => ({
+        ...prevState,
+        [field]: value,
+      }));
+    },
+    []
+  );
 
-  const handleExecute = () => {
+  const handleExecute = useCallback(() => {
     setEditorState((prevState) => ({
       ...prevState,
       output: generateOutput(prevState.html, prevState.css, prevState.js),
     }));
-  };
+  }, []);
 
   return (
     <EditContext.Provider

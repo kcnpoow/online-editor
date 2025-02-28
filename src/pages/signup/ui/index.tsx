@@ -1,18 +1,61 @@
-import { Button } from "@shared/ui/Button";
+import { Link } from 'react-router';
+import { FaLock, FaUser } from 'react-icons/fa';
+import { MdMail } from 'react-icons/md';
+
+import { Input } from '@shared/ui/Input';
+import { Button } from '@shared/ui/Button';
 
 export const Signup = () => {
   return (
-    <div className='h-full lg:grid lg:grid-cols-[3fr_2fr]'>
-      <form className='place-content-center h-full p-8 bg-secondary'></form>
+    <form className='place-content-center h-full p-8 bg-secondary'>
+      <h1 className='text-white text-3xl text-center font-bold'>Sign Up</h1>
 
-      <div className='place-items-center place-content-center p-8 bg-white max-lg:hidden'>
-        <h3 className='mb-10 text-4xl text-center font-bold'>Welcome Back</h3>
+      <Input
+        containerClassName='mb-10'
+        id='username'
+        icon={<FaUser />}
+        type='text'
+        label='Username'
+        autoComplete='off'
+      />
 
-        <p className='mb-10 text-black/75 text-center'>
-          Already have an account? Sign in to continue building and sharing your
-          code.
-        </p>
+      <Input
+        containerClassName='mb-4'
+        id='email'
+        icon={<MdMail />}
+        type='email'
+        label='Email'
+        autoComplete='off'
+      />
+
+      <div className='flex justify-between gap-x-6 mb-6'>
+        <Input
+          id='password'
+          icon={<FaLock />}
+          type='password'
+          label='Password'
+          autoComplete='off'
+        />
+
+        <Input
+          id='confirm-password'
+          icon={<FaLock />}
+          type='password'
+          label='Confirm Password'
+          autoComplete='off'
+        />
       </div>
-    </div>
+
+      <Button className='block mx-auto' color='primary' variant='filled'>
+        Register
+      </Button>
+
+      <div className='mt-4 text-center lg:hidden'>
+        <span className='text-white/75'>Already an account? </span>
+        <Link className='text-success hover:underline' to='/signin'>
+          Sign In
+        </Link>
+      </div>
+    </form>
   );
 };

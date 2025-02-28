@@ -10,14 +10,14 @@ export const Router = () => {
   return (
     <Routes>
       <Route element={<MainLayout />}>
-        <Route path='/' element={<>Home</>} />
+        <Route index path='/' element={<>Home</>} />
       </Route>
 
       <Route element={<AuthLayout />}>
         <Route path='signin' element={<Signin />} />
         <Route path='signup' element={<Signup />} />
       </Route>
-      
+
       <Route path='edit' element={<Edit />} />
     </Routes>
   );

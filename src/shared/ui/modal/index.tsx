@@ -46,7 +46,7 @@ const Modal = ({ isOpen, onClose, children, className }: Props) => {
     >
       <div
         className={
-          'flex flex-col size-full md:max-w-[694px] md:max-h-[1010px] bg-primary border-4 border-secondary rounded-md'
+          'flex flex-col size-full max-w-[700px] max-h-[800px] bg-primary border-4 border-secondary rounded-md'
         }
       >
         {children}

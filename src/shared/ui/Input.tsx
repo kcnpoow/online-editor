@@ -19,7 +19,7 @@ export const Input = ({
 }: Props) => {
   return (
     <div
-      className={cn(containerClassName, 'relative flex items-center', {
+      className={cn(containerClassName, 'relative flex items-center w-full', {
         'mt-6': label,
       })}
     >

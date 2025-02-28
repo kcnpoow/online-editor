@@ -43,17 +43,5 @@ export const Button = <T extends ElementType = 'button'>({
       )}
       {...props}
     />
-    // <Component
-    //   className={cn(
-    //     className,
-    //     'text-sm whitespace-nowrap rounded-sm active:translate-y-[1px]',
-    //     {
-    //       'p-2 md:px-4 md:py-3 md:text-md': adaptive,
-    //       'px-4 py-3': !adaptive,
-    //     },
-    //     colors[color]
-    //   )}
-    //   {...props}
-    // />
   );
 };

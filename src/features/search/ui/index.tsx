@@ -9,6 +9,7 @@ export const Search = () => {
       containerClassName='w-full h-full max-w-80'
       placeholder='Search Draft...'
       icon={<FaSearch />}
+      type='text'
     />
   );
 };

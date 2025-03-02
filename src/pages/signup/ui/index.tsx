@@ -20,7 +20,7 @@ export const Signup = () => {
       />
 
       <Input
-        containerClassName='mb-4'
+        containerClassName='mb-10 md:mb-4'
         id='email'
         icon={<MdMail />}
         type='email'
@@ -28,13 +28,14 @@ export const Signup = () => {
         autoComplete='off'
       />
 
-      <div className='flex justify-between gap-x-6 mb-6'>
+      <div className='mb-6 md:flex md:justify-between md:gap-x-8'>
         <Input
           id='password'
           icon={<FaLock />}
           type='password'
           label='Password'
           autoComplete='off'
+          containerClassName='max-md:mb-10'
         />
 
         <Input
@@ -51,8 +52,8 @@ export const Signup = () => {
       </Button>
 
       <div className='mt-4 text-center lg:hidden'>
-        <span className='text-white/75'>Already an account? </span>
-        <Link className='text-success hover:underline' to='/signin'>
+        <span className='text-white/75'>Already have an account? </span>
+        <Link className='text-success hover:underline' to='/signin' replace>
           Sign In
         </Link>
       </div>

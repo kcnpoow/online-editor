@@ -36,7 +36,7 @@ export const Button = <T extends ElementType = 'button'>({
   return (
     <Component
       className={cn(
-        'active:translate-y-[1px]',
+        'text-nowrap active:translate-y-[1px]',
         colors[color],
         variants[variant],
         className

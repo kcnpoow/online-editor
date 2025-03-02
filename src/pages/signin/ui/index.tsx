@@ -33,7 +33,7 @@ export const Signin = () => {
 
       <div className='mt-4 text-center lg:hidden'>
         <span className='text-white/75'>Don't have an account? </span>
-        <Link className='text-success hover:underline' to='/signup'>
+        <Link className='text-success hover:underline' to='/signup' replace>
           Sign Up
         </Link>
       </div>

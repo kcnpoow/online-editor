@@ -14,12 +14,12 @@ export const Header = ({ onSettingsOpen }: Props) => {
 
       <div className='flex gap-x-2'>
         {!editorSettings.autoUpdate && (
-          <Button color='tertiary' onClick={onExecute} adaptive>
+          <Button color='tertiary' onClick={onExecute}>
             Run
           </Button>
         )}
 
-        <Button color='tertiary' onClick={onSettingsOpen} adaptive>
+        <Button color='tertiary' onClick={onSettingsOpen}>
           Settings
         </Button>
       </div>

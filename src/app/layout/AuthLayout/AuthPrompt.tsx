@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 
 import { Button } from '@shared/ui/Button';
+import { Divider } from '@shared/ui/Divider';
 
 type Props = {
   heading: string;
@@ -27,10 +28,7 @@ export const AuthPrompt = ({ heading, description, linkText, to }: Props) => {
         {linkText}
       </Button>
 
-      <div className='relative flex justify-center items-center w-3/4 my-8 text-black/50'>
-        <hr className='w-full' />
-        <span className='absolute px-4 -mt-1 bg-white'>or</span>
-      </div>
+      <Divider className='max-w-3/4 mt-5 mb-4 text-black/50'>or</Divider>
 
       <Link className='text-black/75 hover:text-black hover:underline' to='/'>
         Continue as guest

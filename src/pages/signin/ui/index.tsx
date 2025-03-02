@@ -20,12 +20,18 @@ export const Signin = () => {
 
       <Input
         id='password'
-        containerClassName='mb-6'
         icon={<FaLock />}
         type='password'
         label='Password'
         autoComplete='off'
+        containerClassName='mb-2'
       />
+
+      <div className='flex justify-end'>
+        <Link className='block ml-auto mb-6 text-white/75 hover:underline hover:text-white' to='#'>
+          Forget password?
+        </Link>
+      </div>
 
       <Button className='block mx-auto' color='primary' variant='filled'>
         Login

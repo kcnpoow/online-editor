@@ -1,3 +1,5 @@
+import { Link } from 'react-router';
+
 import { NavbarToggler } from './NavbarToggler';
 import { Search } from '@features/search';
 import { Button } from '@shared/ui/Button';
@@ -18,9 +20,13 @@ export const Header = ({ isNavbarOpened, toggleNavbar }: Props) => {
       <Search />
 
       <div className='flex gap-x-2 ml-auto'>
-        <Button variant='primary'>Sign Up</Button>
+        <Button color='primary' as={Link} to='/signup'>
+          Sign Up
+        </Button>
 
-        <Button variant='secondary'>Sign In</Button>
+        <Button color='secondary' as={Link} to='/signin'>
+          Sign In
+        </Button>
       </div>
     </header>
   );

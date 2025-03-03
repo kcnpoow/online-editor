@@ -38,7 +38,7 @@ const Modal = ({ isOpen, onClose, children, className }: Props) => {
     <div
       ref={$backdrop}
       className={cn(
-        'fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/75',
+        'fixed inset-0 z-100 flex items-center justify-center px-4 py-8 bg-black/75',
         className,
         isOpen ? '' : 'hidden'
       )}
@@ -46,7 +46,7 @@ const Modal = ({ isOpen, onClose, children, className }: Props) => {
     >
       <div
         className={
-          'w-full max-w-[35rem] bg-primary border-4 border-secondary rounded-md'
+          'flex flex-col size-full md:max-w-[694px] md:max-h-[1010px] bg-primary border-4 border-secondary rounded-md'
         }
       >
         {children}

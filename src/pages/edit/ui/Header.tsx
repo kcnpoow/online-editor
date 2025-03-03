@@ -1,22 +1,26 @@
 import { Button } from '@shared/ui/Button';
+import { useEdit } from '@shared/hooks/useEdit';
 
 type Props = {
-  onExecute: () => void;
   onSettingsOpen: () => void;
 };
 
-export const Header = ({ onExecute, onSettingsOpen }: Props) => {
+export const Header = ({ onSettingsOpen }: Props) => {
+  const { onExecute, editorSettings } = useEdit();
+
   return (
     <header className='flex items-center justify-between p-2 border-b-2 border-tertiary'>
       <span className='text-xl font-semibold'>Untitled</span>
 
       <div className='flex gap-x-2'>
-        <Button variant='secondary' onClick={onSettingsOpen}>
-          Settings
-        </Button>
+        {!editorSettings.autoUpdate && (
+          <Button color='tertiary' onClick={onExecute} adaptive>
+            Run
+          </Button>
+        )}
 
-        <Button variant='primary' onClick={onExecute}>
-          Run
+        <Button color='tertiary' onClick={onSettingsOpen} adaptive>
+          Settings
         </Button>
       </div>
     </header>

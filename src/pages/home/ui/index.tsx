@@ -1,76 +1,33 @@
 import { Button } from '@shared/ui/Button';
 import { useState } from 'react';
-import { TypeAnimation } from 'react-type-animation';
+
+import { CodeContainer } from './CodeContainer.tsx';
+import { HtmlAnimation } from './HtmlAnimation.tsx';
 
 export const Home = () => {
-  const [textColor, setTextColor] = useState('white');
-
   return (
     <div
-      className='pt-4 m-0 p-0'
+      className='pt-4 m-0 p-0 container mx-auto'
       style={{ gridArea: 'main', boxSizing: 'border-box' }}
     >
       <section className='py-12 relative'>
-        <div className='grid grid-cols-2 gap-8 w-full mx-auto relative px-8'>
+        <div className='lg:grid lg:grid-cols-2 lg:gap-8 relative px-8'>
           <div
             className='rounded-[10px] relative z-10 w-full min-h-[410px]'
             style={{ gridArea: '1 / 2' }}
           >
             <div className='relative min-w-[455px]'>
               <div className='w-[90%] right-0 absolute h-[410px] bg-gradient-to-r from-[#4c4f5a] to-[#202125] rounded-[10px]'></div>
-              <div className='right-[20px] top-[-20px] absolute w-[300px] h-[140px] bg-[#1d1e22] rounded-[6px] shadow-[0_4px_30px_rgba(0,0,0,0.5)]'>
-                <header className='grid grid-cols-[36px_auto_36px] items-center'>
-                  <svg className='m-[10px]' width='16' height='16' fill='none'>
-                    <path
-                      d='M15 6.675l-1.8-.6c-.2-.1-.3-.3-.2-.4l.9-1.7c.6-1.2-.7-2.5-1.9-1.9l-1.7.9c-.1.1-.3 0-.4-.2l-.6-1.8c-.4-1.3-2.2-1.3-2.6 0l-.6 1.8c-.1.2-.3.3-.4.2l-1.7-.9c-1.2-.6-2.5.7-1.9 1.9l.9 1.7c.1.1 0 .3-.2.4l-1.8.6c-1.3.4-1.3 2.3 0 2.7l1.8.6c.2 0 .3.2.2.3l-.9 1.7c-.6 1.2.7 2.5 1.9 1.9l1.7-.9c.2-.1.4 0 .4.2l.6 1.8c.4 1.3 2.3 1.3 2.7 0l.6-1.8c.1-.2.3-.3.4-.2l1.7.9c1.2.6 2.5-.7 1.9-1.9l-1-1.7c-.1-.2 0-.4.2-.4l1.8-.6c1.3-.4 1.3-2.2 0-2.6zm-7 3.7c-1.3 0-2.4-1.1-2.4-2.4 0-1.3 1.1-2.4 2.4-2.4 1.3 0 2.4 1.1 2.4 2.4 0 1.3-1.1 2.4-2.4 2.4z'
-                      fill='#4C4F5A'
-                    ></path>
-                  </svg>
-                  {/* icon */}
 
-                  <div className='font-black text-[13px] tracking-[1.57px] text-[#c5c8d4] m-0'>
-                    HTML
-                  </div>
+              <CodeContainer title='HTML' className='right-[20px] top-[-20px]'>
+                <HtmlAnimation />
+              </CodeContainer>
 
-                  {/* icon */}
-                  <svg className='m-[10px]' width='16' height='8' fill='none'>
-                    <path
-                      d='M8.709 7.651l6.161-5.622c.241-.22.383-.517.383-.84 0-.323-.142-.62-.383-.84A1.361 1.361 0 0 0 13.95 0c-.354 0-.68.13-.921.349l-5.27 4.808L2.492.349A1.361 1.361 0 0 0 1.57 0C1.215 0 .89.13.648.336.38.569.253.879.253 1.189c0 .297.127.595.368.84 1.615 1.486 5.807 5.325 6.09 5.596l.03.026c.509.465 1.458.465 1.968 0z'
-                      fill='#4C4F5A'
-                    ></path>
-                  </svg>
-                </header>
-                <div className='text-[13px] leading-[1.3] m-0 mx-[10px] mb-[10px]'>
-                  <code
-                    className='text-[13px] leading-[1.3]'
-                    style={{ color: textColor }}
-                  >
-                    <TypeAnimation
-                      sequence={[
-                        '<div',
-                        1000,
-                        () => setTextColor('#a88038'),
-                        '<div class',
-                        1000,
-                        () => setTextColor('#e1ca72'),
-                        '<div class=',
-                        1000,
-                        '<div class="rect"',
-                        1000,
-                        () => setTextColor('#74b087'),
-                        '<div class="rect"></div> ',
-                        1000,
-                        () => setTextColor('#a88038'),
-                      ]}
-                      repeat={Infinity}
-                    />
-                  </code>
-                </div>
-              </div>
+              <CodeContainer title='CSS' className='right-[-30px] top-[130px]'>
+              </CodeContainer>
 
-              <div className='right-[-30px] top-[130px] absolute w-[300px] h-[140px]  bg-[#1d1e22] rounded-[6px] shadow-[0_4px_30px_rgba(0,0,0,0.5)]'></div>
-
-              <div className='right-[40px] top-[280px] absolute w-[300px] h-[140px]  bg-[#1d1e22] rounded-[6px] shadow-[0_4px_30px_rgba(0,0,0,0.5)]'></div>
+              <CodeContainer title='JS' className='right-[40px] top-[280px]'>
+              </CodeContainer>
             </div>
           </div>
 
@@ -87,7 +44,7 @@ export const Home = () => {
                 HTML, CSS and JavaScript
               </strong>
             </p>
-            <Button className='bg-[#47cf73]' variant='secondary'>
+            <Button className='bg-[#47cf73]' color='secondary'>
               Sign Up
             </Button>
           </div>
@@ -123,7 +80,7 @@ export const Home = () => {
               </a>
               to keep your work private.
             </p>
-            <Button variant='secondary'>Try the Editor</Button>
+            <Button color='secondary'>Try the Editor</Button>
           </div>
 
           <div className='bg-[#2c303a] p-6 pb-8 m-8 rounded-[10px] relative z-[1]'>
@@ -147,7 +104,7 @@ export const Home = () => {
               </a>
               .
             </p>
-            <Button variant='secondary'>Explore</Button>
+            <Button color='secondary'>Explore</Button>
           </div>
         </div>
       </section>
@@ -422,7 +379,7 @@ export const Home = () => {
         </section>
 
         <nav className='mt-20 mb-12 flex justify-center items-center my-[2rem] mb-[1rem]'>
-          <Button variant='secondary'>Next&gt;</Button>
+          <Button color='secondary'>Next&gt;</Button>
         </nav>
       </div>
 
@@ -520,8 +477,12 @@ export const Home = () => {
 
           <div className='-mb-12 relative'>
             <ul>
-              <li className="absolute top-0">
-                <img className='max-w-full h-auto' src="https://cpwebassets.codepen.io/assets/packs/editor-support-9cc33b6268c0a6c897033028084e1851.png" alt="" />
+              <li className='absolute top-0'>
+                <img
+                  className='max-w-full h-auto'
+                  src='https://cpwebassets.codepen.io/assets/packs/editor-support-9cc33b6268c0a6c897033028084e1851.png'
+                  alt=''
+                />
               </li>
             </ul>
           </div>

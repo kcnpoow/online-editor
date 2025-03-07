@@ -1,7 +1,7 @@
 import { SettingsRow } from './SettingsRow';
 import { Switch } from '@shared/ui/Swtich';
 
-import { useEdit } from '@shared/hooks/useEdit';
+import { useEdit } from '@pages/edit/lib/useEdit';
 
 export const Behavior = () => {
   const { editorSettings, onEditorSettingsChange } = useEdit();

@@ -28,8 +28,8 @@ export const AuthPrompt = ({ heading, description, linkText, to }: Props) => {
         {linkText}
       </Button>
 
-      <Divider className='max-w-3/4 mt-5 mb-4 text-black/50'>or</Divider>
-
+      <Divider className='max-w-2/3 mt-5 mb-4 text-black/50'>or</Divider>
+      
       <Link className='text-black/75 hover:text-black hover:underline' to='/'>
         Continue as guest
       </Link>

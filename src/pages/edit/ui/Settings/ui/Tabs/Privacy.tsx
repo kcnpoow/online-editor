@@ -1,9 +1,7 @@
-import { FaLock } from 'react-icons/fa';
-
 import { SettingsRow } from './SettingsRow';
 import { Switch } from '@shared/ui/Swtich';
 import { Input } from '@shared/ui/Input';
-import { useEdit } from '@shared/hooks/useEdit';
+import { useEdit } from '@pages/edit/lib/useEdit';
 
 export const Privacy = () => {
   const { editorSettings, onEditorSettingsChange } = useEdit();
@@ -21,14 +19,7 @@ export const Privacy = () => {
           }
         />
 
-        {editorSettings.isPrivate && (
-          <Input
-            value='localhost:8000'
-            readOnly
-            className='text-black bg-white'
-            icon={<FaLock />}
-          />
-        )}
+        {editorSettings.isPrivate && <Input value='localhost:8000' readOnly />}
       </SettingsRow>
     </section>
   );

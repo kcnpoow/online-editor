@@ -19,7 +19,7 @@ const colors: { [K in Color]: string } = {
 };
 
 const variants: { [K in Variant]: string } = {
-  filled: 'px-4 py-2',
+  filled: 'px-4 py-2 rounded-sm',
   outlined: 'px-6 py-2 bg-transparent border-2 rounded-full',
 };
 

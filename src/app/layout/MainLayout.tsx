@@ -19,7 +19,7 @@ export const MainLayout = () => {
       <div className='flex flex-col grow'>
         <Header isNavbarOpened={isNavbarOpened} toggleNavbar={toggleNavbar} />
 
-        <main className='grow px-4 bg-primary'>
+        <main className='grow bg-primary'>
           <Outlet />
         </main>
 

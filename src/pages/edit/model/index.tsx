@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useState, useCallback } from 'react';
 
-import { generateOutput } from '../lib';
+import { generateOutput } from '../lib/generateOutput';
 
 type EditorStateFields = 'html' | 'css' | 'js';
 type EditorState = Record<EditorStateFields, string> & { output: string };

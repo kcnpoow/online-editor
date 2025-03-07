@@ -9,7 +9,7 @@ import { Tab } from './Tab';
 import { EditorTabs } from '../model';
 import { CustomPanelResizeHandle } from './CustomPanelResizeHandle';
 import { CodeEditor } from './CodeEditor';
-import { useEdit } from '@shared/hooks/useEdit';
+import { useEdit } from '@pages/edit/lib/useEdit';
 
 export const Editor = () => {
   const [currentEditor, setCurrentEditor] = useState<EditorTabs>('html');

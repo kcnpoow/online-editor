@@ -11,7 +11,7 @@ export const Sidebar = ({ isNavbarOpened,  }: Props) => {
     <aside>
       <div
         className={cn(
-          'absolute top-[53px] left-4 transition-all duration-200 ease-out origin-top-left md:hidden',
+          'absolute top-[53px] z-50 left-4 transition-all duration-200 ease-out origin-top-left md:hidden',
           isNavbarOpened
             ? 'scale-100 opacity-100 visible'
             : 'scale-75 opacity-0 invisible'

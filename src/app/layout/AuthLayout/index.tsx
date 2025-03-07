@@ -10,7 +10,7 @@ export const AuthLayout = () => {
   const isSignup = location.pathname === '/signup';
 
   return (
-    <div className='flex items-center justify-center h-screen bg-tertiary'>
+    <div className='flex items-center justify-center h-screen bg-zinc-800'>      
       <div className='flex w-full h-full lg:max-w-[60rem] lg:max-h-[40rem] lg:rounded-2xl lg:overflow-hidden'>
         <div
           className={cn(

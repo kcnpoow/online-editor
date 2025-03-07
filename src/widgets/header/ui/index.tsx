@@ -11,7 +11,7 @@ type Props = {
 
 export const Header = ({ isNavbarOpened, toggleNavbar }: Props) => {
   return (
-    <header className='flex items-center gap-x-2 px-4 py-2 bg-black md:py-4'>
+    <header className='flex items-center gap-x-2 px-4 py-2 bg-black border-b-1 border-[#252830] md:py-4'>
       <NavbarToggler
         isNavbarOpened={isNavbarOpened}
         toggleNavbar={toggleNavbar}

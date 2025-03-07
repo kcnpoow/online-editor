@@ -3,6 +3,7 @@ import { FaLock, FaUser } from 'react-icons/fa';
 
 import { Input } from '@shared/ui/Input';
 import { Button } from '@shared/ui/Button';
+import { Divider } from '@shared/ui/Divider';
 
 export const Signin = () => {
   return (
@@ -28,7 +29,10 @@ export const Signin = () => {
       />
 
       <div className='flex justify-end'>
-        <Link className='block ml-auto mb-6 text-white/75 hover:underline hover:text-white' to='#'>
+        <Link
+          className='block ml-auto mb-6 text-white/75 hover:underline hover:text-white'
+          to='#'
+        >
           Forget password?
         </Link>
       </div>

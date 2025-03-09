@@ -9,7 +9,7 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
-  className?: string
+  className?: string;
 };
 
 const Modal = ({ isOpen, onClose, children, className }: Props) => {
@@ -42,6 +42,7 @@ const Modal = ({ isOpen, onClose, children, className }: Props) => {
         className,
         isOpen ? '' : 'hidden'
       )}
+      tabIndex={1}
       onClick={handleBackdropClick}
     >
       <div

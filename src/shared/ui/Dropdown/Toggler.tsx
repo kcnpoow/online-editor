@@ -5,7 +5,7 @@ type Props = {
   toggleNavbar: () => void;
 };
 
-export const NavbarToggler = ({ isNavbarOpened, toggleNavbar }: Props) => {
+export const Toggler = ({ isNavbarOpened, toggleNavbar }: Props) => {
   return (
     <button
       className='relative pl-1.5 pr-3 h-full bg-[#5A5F73] rounded-sm md:hidden'

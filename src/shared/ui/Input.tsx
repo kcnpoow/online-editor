@@ -6,6 +6,7 @@ type Props = {
   icon?: ReturnType<IconType>;
   containerClassName?: string;
   label?: string;
+  error?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export const Input = ({
@@ -15,23 +16,27 @@ export const Input = ({
   icon,
   label,
   placeholder,
+  error,
   ...props
 }: Props) => {
   return (
     <div
-      className={cn(containerClassName, 'relative flex items-center w-full', {
-        'mt-6': label,
-      })}
+      className={cn(
+        containerClassName,
+        'relative flex flex-col justify-center w-full',
+        {
+          'mt-6': label,
+        }
+      )}
     >
       <input
         className={cn(
           className,
-          `
-          peer w-full p-3 text-white placeholder-[#878C9E] bg-[#26282F] rounded-md
-          not-read-only:focus-within:outline-0 not-read-only:focus-within:bg-[#454856]
-          `,
+          'peer w-full p-3 text-white placeholder-[#878C9E] bg-[#26282F] rounded-md not-read-only:focus-within:bg-[#454856]',
           {
             'pl-10': icon,
+            'outline-2 outline-red-400': error,
+            ' not-read-only:focus-within:outline-0': !error,
           }
         )}
         placeholder={label ? ' ' : placeholder}
@@ -43,9 +48,9 @@ export const Input = ({
         <label
           className={cn(
             `
-            absolute text-[#878c9e] transition-all pointer-events-none 
-            peer-focus-within:-translate-y-9 peer-focus-within:translate-x-0 peer-focus-within:text-white
-            peer-[:not(:placeholder-shown)]:-translate-y-9 peer-[:not(:placeholder-shown)]:translate-x-0 peer-[:not(:placeholder-shown)]:text-white
+            absolute text-[#878c9e] transition-transform pointer-events-none
+            peer-focus-within:-translate-y-9 peer-focus-within:translate-x-0 peer-focus-within:text-white peer-[:not(:placeholder-shown)]:text-white
+            peer-[:not(:placeholder-shown)]:-translate-y-9 peer-[:not(:placeholder-shown)]:translate-x-0
             `,
             {
               'translate-x-10': icon,

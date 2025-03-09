@@ -10,8 +10,8 @@ export const AuthLayout = () => {
   const isSignup = location.pathname === '/signup';
 
   return (
-    <div className='flex items-center justify-center h-screen bg-zinc-800'>      
-      <div className='flex w-full h-full lg:max-w-[60rem] lg:max-h-[40rem] lg:rounded-2xl lg:overflow-hidden'>
+    <div className='flex items-center justify-center h-screen bg-zinc-800'>
+      <div className='flex w-full h-full lg:overflow-hidden lg:max-w-[60rem] lg:max-h-[40rem] lg:border-1 lg:border-tertiary lg:rounded-2xl'>
         <div
           className={cn(
             'flex-shrink min-w-0 bg-secondary lg:transition-all lg:duration-300',

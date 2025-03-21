@@ -3,7 +3,7 @@ import { TypeAnimation } from 'react-type-animation';
 
 
 export const HtmlAnimation = () => {
-  const [textColor, setTextColor] = useState('white');
+  const [textColor] = useState('white');
 
   return (
     <code className='text-[13px] leading-[1.3]' style={{ color: textColor }}>
@@ -11,21 +11,73 @@ export const HtmlAnimation = () => {
         sequence={[
           '<div',
           1000,
-          () => setTextColor('#a88038'),
           '<div class',
           1000,
-          () => setTextColor('#e1ca72'),
           '<div class=',
           1000,
           '<div class="rect"',
           1000,
-          () => setTextColor('#74b087'),
           '<div class="rect"></div> ',
           1000,
-          () => setTextColor('#a88038'),
         ]}
-        repeat={Infinity}
+        repeat={0}
       />
     </code>
   );
 };
+
+export const CssAnimation = () => {
+  const [textColor] = useState('white');
+
+  return (
+    <code className='text-[13px] leading-[1.3]' style={{ color: textColor }}>
+      <TypeAnimation
+        sequence={[
+          '.rect {',
+          1000,
+          'background: linear-gradient(',
+          1000,
+          '-119deg,',
+          1000,
+          '$gray 0%,',
+          1000,
+          '$dark-gray 100%',
+          1000,
+          '); }',
+          1000,
+        ]}
+        repeat={0}
+      />
+    </code>
+  );
+};
+
+
+export const JsAnimation = () => {
+  const [textColor] = useState('white');
+
+  return (
+    <code className='text-[13px] leading-[1.3]' style={{ color: textColor }}>
+      <TypeAnimation
+        sequence={[
+          'var colors = [',
+          1000,
+          '"#74B087",',
+          1000,
+          '"#DE7300",',
+          1000,
+          '"#74B087"',
+          1000,
+          '];',
+          1000,
+          '\n\nfunction animate() {};',
+          1000,
+        ]}
+        repeat={0}
+      />
+    </code>
+  );
+};
+
+
+

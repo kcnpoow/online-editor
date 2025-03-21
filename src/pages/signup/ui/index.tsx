@@ -46,7 +46,7 @@ export const Signup = () => {
       <h1 className='text-white text-3xl text-center font-bold'>Sign Up</h1>
 
       <Input
-        containerClassName='mb-10'
+        containerClassName='mb-4'
         id='username'
         icon={<FaUser />}
         type='text'
@@ -57,7 +57,7 @@ export const Signup = () => {
       />
 
       <Input
-        containerClassName='mb-10 md:mb-4'
+        containerClassName='mb-4'
         id='email'
         icon={<MdMail />}
         type='email'
@@ -74,7 +74,7 @@ export const Signup = () => {
           type='password'
           label='Password'
           autoComplete='off'
-          containerClassName='max-md:mb-10'
+          containerClassName='w-full max-md:mb-4'
           value={formData.password}
           onChange={(e) => handleChange('password', e.target.value)}
         />
@@ -85,6 +85,7 @@ export const Signup = () => {
           type='password'
           label='Confirm Password'
           autoComplete='off'
+          containerClassName='w-full'
           value={formData.confirmPassword}
           onChange={(e) => handleChange('confirmPassword', e.target.value)}
         />

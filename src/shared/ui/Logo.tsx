@@ -1,5 +1,13 @@
 import { Link } from 'react-router';
 
-export const Logo = () => {
-  return <Link to='/'>Logo</Link>;
+type Props = {
+  className?: string;
+};
+
+export const Logo = ({ className }: Props) => {
+  return (
+    <Link to='/' className={className}>
+      Logo
+    </Link>
+  );
 };

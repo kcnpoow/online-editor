@@ -4,6 +4,7 @@ import { FaLock, FaUser } from 'react-icons/fa';
 
 import { Input } from '@shared/ui/Input';
 import { Button } from '@shared/ui/Button';
+import { Alert } from '@shared/ui/Alert';
 import { authApi } from '@shared/api/AuthApi';
 
 const initialFormData = {
@@ -14,7 +15,7 @@ const initialFormData = {
 const initialErrors = {
   username: '',
   password: '',
-  error: '',
+  generalError: '',
 };
 
 export const Signin = () => {
@@ -30,6 +31,7 @@ export const Signin = () => {
 
     setErrors((prev) => ({
       ...prev,
+      generalError: '',
       [field]: '',
     }));
   };
@@ -38,13 +40,15 @@ export const Signin = () => {
     e.preventDefault();
 
     setIsSubmitting(true);
+    setErrors(initialErrors);
 
     try {
-      await authApi.signin(formData.username, formData.password);
+      const result = await authApi.signin(formData.username, formData.password);
+
+      console.log(result);
     } catch (error) {
       setErrors((prev) => ({
         ...prev,
-        ['username']: 'asd',
       }));
     } finally {
       setIsSubmitting(false);
@@ -60,10 +64,10 @@ export const Signin = () => {
 
       <Input
         id='username'
-        containerClassName='mb-10'
         icon={<FaUser />}
         type='text'
         label='Username'
+        containerClassName='mb-4'
         autoComplete='off'
         value={formData.username}
         onChange={(e) => handleChange('username', e.target.value)}
@@ -82,14 +86,20 @@ export const Signin = () => {
         error={errors.password}
       />
 
-      <div className='flex justify-end'>
+      <div className='flex justify-end mb-6'>
         <Link
-          className='block ml-auto mb-6 text-white/75 hover:underline hover:text-white'
+          className='block ml-auto text-white/75 hover:underline hover:text-white'
           to='#'
         >
           Forgot password?
         </Link>
       </div>
+
+      {errors.generalError && (
+        <Alert className='my-6' variant='error'>
+          {errors.generalError}
+        </Alert>
+      )}
 
       <Button
         className='block mx-auto'
@@ -98,7 +108,7 @@ export const Signin = () => {
         type='submit'
         disabled={isSubmitting}
       >
-        {isSubmitting ? 'Logging in...' : 'Login'}
+        Login
       </Button>
 
       <div className='mt-4 text-center lg:hidden'>

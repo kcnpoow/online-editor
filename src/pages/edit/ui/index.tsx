@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import { Header } from './Header';
 import { EditProvider } from '../model';
-import { Editor } from '@pages/edit/ui/Editor';
-import { Settings } from '@pages/edit/ui/Settings';
+import { Editor } from './Editor';
+import { Settings } from './Settings';
 
 export const Edit = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);

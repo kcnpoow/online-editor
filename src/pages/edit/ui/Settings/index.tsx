@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { Menu } from './Menu';
 import { Behavior, Privacy } from './Tabs';
-import type { Tabs } from '../model';
+import { SettingsTabs } from '@pages/edit/model';
 import { Button } from '@shared/ui/Button';
 import { Modal } from '@shared/ui/Modal';
 
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const Settings = ({ isSettingsOpen, onSettingsClose }: Props) => {
-  const [currentTab, setCurrentTab] = useState<Tabs>('behavior');
+  const [currentTab, setCurrentTab] = useState<SettingsTabs>('behavior');
 
   const renderCurrentTab = () => {
     switch (currentTab) {

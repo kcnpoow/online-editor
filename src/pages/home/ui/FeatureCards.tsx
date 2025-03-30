@@ -15,7 +15,7 @@ export const FeatureCards = ({
   buttonText,
 }: Props) => {
   return (
-    <div className='bg-[#2c303a] p-6 pb-8 m-8 rounded-[10px] relative '>
+    <div className='bg-[#2c303a] p-6 pb-8 rounded-lg relative '>
       <div className='mb-4 -mt-10 bg-[#131417] rounded-[10px] w-[75px] h-[75px]'>
         <img
           className=' mb-0 mx-2.5 max-w-full h-auto text-center'

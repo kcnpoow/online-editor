@@ -6,7 +6,7 @@ import { javascript } from '@codemirror/lang-javascript';
 import cn from 'classnames';
 
 import { Tab } from './Tab';
-import { EditorTabs } from '../model';
+import { EditorTabs } from '@pages/edit/model';
 import { CustomPanelResizeHandle } from './CustomPanelResizeHandle';
 import { CodeEditor } from './CodeEditor';
 import { useEdit } from '@pages/edit/lib/useEdit';

@@ -58,7 +58,7 @@ export const Signin = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className='place-content-center h-full p-8 bg-secondary'
+      className='place-content-center h-full py-4 px-30 bg-secondary'
     >
       <h1 className='text-white text-3xl text-center font-bold'>Sign In</h1>
 

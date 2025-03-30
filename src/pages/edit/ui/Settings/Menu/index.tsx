@@ -1,9 +1,9 @@
-import { Tabs } from '../../model';
+import { SettingsTabs } from '@pages/edit/model';
 import { MenuItem } from './MenuItem';
 
 type Props = {
-  currentTab: Tabs;
-  setCurrentTab: (tab: Tabs) => void;
+  currentTab: SettingsTabs;
+  setCurrentTab: (tab: SettingsTabs) => void;
 };
 
 export const Menu = ({ currentTab, setCurrentTab }: Props) => {

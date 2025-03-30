@@ -9,8 +9,8 @@ import { useState } from 'react';
 import { authApi } from '@shared/api/AuthApi';
 
 const initialFormData = {
-  username: '',
-  email: '',
+  username: 'w',
+  email: 'w',
   password: '',
   confirmPassword: '',
 };
@@ -40,7 +40,7 @@ export const Signup = () => {
 
   return (
     <form
-      className='place-content-center h-full p-8 bg-secondary'
+      className='place-content-center h-full py-4 px-30 bg-secondary'
       onSubmit={handleSubmit}
     >
       <h1 className='text-white text-3xl text-center font-bold'>Sign Up</h1>
@@ -67,7 +67,7 @@ export const Signup = () => {
         onChange={(e) => handleChange('email', e.target.value)}
       />
 
-      <div className='mb-6 md:flex md:justify-between md:gap-x-8'>
+      <div className='mb-6 md:flex md:justify-between md:gap-x-4'>
         <Input
           id='password'
           icon={<FaLock />}

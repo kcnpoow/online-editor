@@ -90,3 +90,6 @@ export const EditProvider = ({ children }: Props) => {
     </EditContext.Provider>
   );
 };
+
+export type EditorTabs = 'html' | 'css' | 'js';
+export type SettingsTabs = 'behavior' | 'privacy'

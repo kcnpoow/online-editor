@@ -1,12 +1,13 @@
-import { Button } from '@shared/ui/Button';
 import { useState } from 'react';
+import { Link } from 'react-router';
 
 import { CodeContainer } from './CodeContainer.tsx';
 import { FeatureCards } from './FeatureCards.tsx';
-import { HtmlAnimation, JsAnimation, CssAnimation } from './HtmlAnimation.tsx';
+import { HtmlAnimation, JsAnimation, CssAnimation } from './CodeAnimation.tsx';
 import { ImageListCard } from './ImageListCard.tsx';
 import { ListCard } from './ListCard.tsx';
 import { DraftCard } from '@entities/draft/index.ts';
+import { Button } from '@shared/ui/Button';
 
 const PAGE_SIZE = 5;
 const articles = [
@@ -180,36 +181,33 @@ export const Home = () => {
 
   return (
     <div className='pt-4 border-box'>
-      <section className='container mx-auto lg:py-12 relative py-6'>
-        <div className='lg:grid lg:grid-cols-2 lg:gap-8 max-sm:px-2.5  w-full mx-auto relative px-8'>
+      <section className='container mx-auto px-6 lg:py-12 relative py-6'>
+        <div className='lg:grid lg:grid-cols-2 lg:gap-8  w-full mx-auto relative'>
           <div className='lg:col-start-2 lg:row-start-1 max-lg:min-h-96 rounded-[10px] relative w-full min-h-[410px]'>
-            <div className='max-lg:min-h-[300px] max-lg:mb-8 relative min-w-[455px]'>
-              <div className='lg:w-[90%] lg:right-0  max-lg:left-[5%] max-lg:top-0 max-lg:w-p[90%] max-lg:h-80 w- absolute h-[410px] bg-gradient-to-r from-[#4c4f5a] to-[#202125] rounded-xl'></div>
+            <div className='w-full lg:right-0 h-full max-lg:top-0 absolute bg-gradient-to-r from-[#4c4f5a] to-[#202125] rounded-xl'></div>
+            <CodeContainer
+              title='HTML'
+              className='max-lg:left-2/10 lg:right-5 -top-5'
+            >
+              <HtmlAnimation />
+            </CodeContainer>
 
-              <CodeContainer
-                title='HTML'
-                className='max-lg:top-5 max-lg:left-[2.5%] right-5 -top-5'
-              >
-                <HtmlAnimation />
-              </CodeContainer>
+            <CodeContainer
+              title='CSS'
+              className='max-lg:right-1/10 lg:-right-3 top-1/2 -translate-y-1/2'
+            >
+              <CssAnimation />
+            </CodeContainer>
 
-              <CodeContainer
-                title='CSS'
-                className='max-lg:top-20 max-lg:right-[2.5%] right-[-30px] top-[130px]'
-              >
-                <CssAnimation />
-              </CodeContainer>
-
-              <CodeContainer
-                title='JS'
-                className='max-lg:top-36 max-lg:left-[50%] max-lg:-ml-64 max-lg:z-10 right-[40px] top-[280px]'
-              >
-                <JsAnimation />
-              </CodeContainer>
-            </div>
+            <CodeContainer
+              title='JS'
+              className='max-lg:left-1/10 lg:right-2 -bottom-5'
+            >
+              <JsAnimation />
+            </CodeContainer>
           </div>
 
-          <div className='max-lg:text-center max-lg:mx-8 relative'>
+          <div className='max-lg:mt-16  max-lg:text-center'>
             <div className='flex gap-4'>
               {/* logo */}
               <h1 className='text-5xl leading-[1.1] mb-2.5 font-bold'>
@@ -222,15 +220,15 @@ export const Home = () => {
                 HTML, CSS and JavaScript
               </strong>
             </p>
-            <Button className='bg-[#47cf73]' color='secondary'>
+            <Button className='bg-[#47cf73]' color='secondary' as={Link} to='/signup'>
               Sign Up
             </Button>
           </div>
         </div>
       </section>
 
-      <section className='container mx-auto relative py-12'>
-        <div className='lg:grid lg:grid-cols-2 lg:gap-8 max-sm:px-2.5 w-full mx-auto relative px-2'>
+      <section className='container mx-auto py-12 px-6'>
+        <div className='grid gap-y-14 gap-x-8 w-full mx-auto lg:grid-cols-2'>
           <FeatureCards
             icnos='https://cpwebassets.codepen.io/assets/packs/icon-build-0f21c66ed03bfb36c597636d27ca621e.svg'
             title='Build &amp; Test'
@@ -238,18 +236,7 @@ export const Home = () => {
               <>
                 Get work done quicker by building out{' '}
                 <strong>entire projects</strong> or isolating code to{' '}
-                <strong>test features and animations</strong>. Want to keep it
-                all under wraps?{' '}
-                <a className='text-[#76daff]' href='#'>
-                  <strong>
-                    Upgrade to a{' '}
-                    <span className='m-0 mx-[2px] bg-[#ffdd40] text-zinc-950 uppercase text-[0.8rem] p-[0.125rem_0.375rem_0] rounded-[2px] '>
-                      PRO
-                    </span>{' '}
-                    account{' '}
-                  </strong>
-                </a>
-                to keep your work private.
+                <strong>test features and animations</strong>.
               </>
             }
             buttonText='Try the Editor'
@@ -262,12 +249,7 @@ export const Home = () => {
               <>
                 Become a part of the{' '}
                 <strong>most active front-end community</strong> in the world by
-                sharing work. Presenting at a conference? Show your code
-                directly in the browser with{' '}
-                <a href='#'>
-                  <strong className='text-[#76daff]'>Presentation Mode</strong>
-                </a>
-                .
+                sharing work.
               </>
             }
             buttonText='Explore'
@@ -275,9 +257,9 @@ export const Home = () => {
         </div>
       </section>
 
-      <div className='container mx-auto'>
+      <div className='container mx-auto px-6'>
         <section className='pt-12 -mb-12'>
-          <div className='lg:grid-cols-[repeat(auto-fill,minmax(320px,1fr))] max-sm:px-2.5 grid items-start justify-items-center gap-12 grid-template-columns: repeat(auto-fill,minmax(320px,1fr)); w-full mx-auto relative px-8'>
+          <div className='lg:grid-cols-[repeat(auto-fill,minmax(320px,1fr))] grid items-start justify-items-center gap-12 grid-template-columns: repeat(auto-fill,minmax(320px,1fr)); w-full mx-auto relative'>
             <div className='max-md:min-h-full max-md:flex max-md:items-center'>
               <div>
                 <h2 className='text-[1.8rem] leading-[1.2] font-normal mb-[10px]'>
@@ -318,7 +300,7 @@ export const Home = () => {
       </div>
 
       <section className='bg-[#191a1f] relative overflow-hidden py-12 mt-12 mb-20'>
-        <div className='container mx-auto'>
+        <div className='container mx-auto px-6'>
           <div className='text-center mb-12'>
             <h2 className='text-[1.8rem] leading-[1.2] mb-[10px] font-normal'>
               A front-end environment made for testing and sharing
@@ -328,7 +310,7 @@ export const Home = () => {
             </a>
           </div>
 
-          <div className='lg:grid lg:grid-cols-[33%_66%] lg:gap-8 max-sm:px-2.5 w-full mx-auto relative px-8'>
+          <div className='lg:grid lg:grid-cols-[33%_66%] lg:gap-8 w-full mx-auto relative'>
             <ul className='cursor-pointer'>
               {titles.map((title, index) => (
                 <ListCard
@@ -341,13 +323,13 @@ export const Home = () => {
               ))}
             </ul>
 
-            <div className='-mb-12 relative'>
-              <ul className='max-lg:pb-[65%] max-lg:w-full max-lg:block'>
+            <div className=''>
+              <ul>
                 {images.map((imgUrl, index) => (
                   <ImageListCard
                     imgUrl={imgUrl}
                     isVisible={openIndex === index}
-                  ></ImageListCard>
+                  />
                 ))}
               </ul>
             </div>

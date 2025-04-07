@@ -15,7 +15,7 @@ export const ListCard = ({ title, description, isOpen, onClick }: Props) => {
   };
 
   return (
-    <li className='lg:my-2'>
+    <li className='not-last:mb-2'>
       <details
         open={isOpen}
         className='text-[#c7c9d3] p-3 px-4 rounded-md transition-all duration-300 ease-in-out bg-[#131417]'

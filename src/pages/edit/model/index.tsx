@@ -1,22 +1,22 @@
-import { createContext, ReactNode, useState, useCallback } from 'react';
+import { createContext, ReactNode, useState } from 'react';
 
 import { generateOutput } from '../lib/generateOutput';
 
-type EditorStateFields = 'html' | 'css' | 'js';
-type EditorState = Record<EditorStateFields, string> & { output: string };
-
-type EditorSettings = {
+export type EditorStateFields = 'html' | 'css' | 'js';
+type EditorState = Record<EditorStateFields, string> & {
+  output: string;
   autoUpdate: boolean;
-  isPrivate: boolean;
+  private: boolean;
+  collabMode: boolean;
+  collabId?: string;
+  connectedUsers: string[];
 };
 
 export type EditContextValues = {
   editorState: EditorState;
-  editorSettings: EditorSettings;
-  onEditorStateChange: (field: EditorStateFields, value: string) => void;
-  onEditorSettingsChange: <K extends keyof EditorSettings>(
+  onEditorStateChange: <K extends keyof EditorState>(
     field: K,
-    value: EditorSettings[K]
+    value: EditorState[K]
   ) => void;
   onExecute: () => void;
 };
@@ -33,56 +33,44 @@ export const EditProvider = ({ children }: Props) => {
     css: '',
     js: '',
     output: '',
+    autoUpdate: false,
+    private: false,
+    collabMode: false,
+    collabId: undefined,
+    connectedUsers: [],
   });
 
-  const [editorSettings, setEditorSettings] = useState<EditorSettings>({
-    autoUpdate: true,
-    isPrivate: false,
-  });
+  const handleEditorStateChange = <K extends keyof EditorState>(
+    field: K,
+    value: EditorState[K]
+  ) => {
+    setEditorState((prevState) => {
+      const newState = { ...prevState, [field]: value };
 
-  const handleEditorStateChange = useCallback(
-    (field: EditorStateFields, value: string) => {
-      setEditorState((prevState) => {
-        const newState = { ...prevState, [field]: value };
+      if (editorState.autoUpdate) {
+        newState.output = generateOutput(
+          newState.html,
+          newState.css,
+          newState.js
+        );
+      }
 
-        if (editorSettings.autoUpdate) {
-          newState.output = generateOutput(
-            newState.html,
-            newState.css,
-            newState.js
-          );
-        }
+      return newState;
+    });
+  };
 
-        return newState;
-      });
-    },
-    [editorSettings.autoUpdate]
-  );
-
-  const handleEditorSettingsChange = useCallback(
-    <K extends keyof EditorSettings>(field: K, value: EditorSettings[K]) => {
-      setEditorSettings((prevState) => ({
-        ...prevState,
-        [field]: value,
-      }));
-    },
-    []
-  );
-
-  const handleExecute = useCallback(() => {
+  const handleExecute = () => {
     setEditorState((prevState) => ({
       ...prevState,
       output: generateOutput(prevState.html, prevState.css, prevState.js),
     }));
-  }, []);
+  };
 
   return (
     <EditContext.Provider
       value={{
         editorState,
-        editorSettings,
         onEditorStateChange: handleEditorStateChange,
-        onEditorSettingsChange: handleEditorSettingsChange,
         onExecute: handleExecute,
       }}
     >
@@ -92,4 +80,4 @@ export const EditProvider = ({ children }: Props) => {
 };
 
 export type EditorTabs = 'html' | 'css' | 'js';
-export type SettingsTabs = 'behavior' | 'privacy'
+export type SettingsTabs = 'behavior' | 'privacy' | 'collab';

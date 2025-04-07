@@ -14,7 +14,7 @@ export const AuthLayout = () => {
       <div className='flex w-full h-full lg:overflow-hidden lg:max-w-[60rem] lg:max-h-[40rem] lg:border-1 lg:border-tertiary lg:rounded-2xl'>
         <div
           className={cn(
-            'flex-shrink min-w-0 bg-secondary lg:transition-all lg:duration-300',
+            'flex-0 min-w-0 bg-secondary lg:transition-all lg:duration-300',
             {
               'flex-2 opacity-100': isSignup,
               'flex-0 opacity-0': !isSignup,
@@ -46,7 +46,7 @@ export const AuthLayout = () => {
 
         <div
           className={cn(
-            'flex-shrink min-w-0 bg-secondary lg:transition-all lg:duration-300',
+            'flex-0 min-w-0 bg-secondary lg:transition-all lg:duration-300',
             {
               'flex-2 opacity-100': isSignin,
               'flex-0 opacity-0': !isSignin,

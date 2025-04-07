@@ -1,16 +1,15 @@
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import { Link } from 'react-router';
 import { FaLock, FaUser } from 'react-icons/fa';
 import { MdMail } from 'react-icons/md';
 
 import { Input } from '@shared/ui/Input';
 import { Button } from '@shared/ui/Button';
-import { useState } from 'react';
 import { authApi } from '@shared/api/AuthApi';
 
 const initialFormData = {
-  username: 'w',
-  email: 'w',
+  username: '',
+  email: '',
   password: '',
   confirmPassword: '',
 };
@@ -39,68 +38,67 @@ export const Signup = () => {
   };
 
   return (
-    <form
-      className='place-content-center h-full py-4 px-30 bg-secondary'
-      onSubmit={handleSubmit}
-    >
-      <h1 className='text-white text-3xl text-center font-bold'>Sign Up</h1>
+    <form className='content-center h-full' onSubmit={handleSubmit}>
+      <fieldset className='flex flex-col max-w-105 p-4 mx-auto'>
+        <h1 className='text-white text-3xl text-center font-bold'>Sign Up</h1>
 
-      <Input
-        containerClassName='mb-4'
-        id='username'
-        icon={<FaUser />}
-        type='text'
-        label='Username'
-        autoComplete='off'
-        value={formData.username}
-        onChange={(e) => handleChange('username', e.target.value)}
-      />
-
-      <Input
-        containerClassName='mb-4'
-        id='email'
-        icon={<MdMail />}
-        type='email'
-        label='Email'
-        autoComplete='off'
-        value={formData.email}
-        onChange={(e) => handleChange('email', e.target.value)}
-      />
-
-      <div className='mb-6 md:flex md:justify-between md:gap-x-4'>
         <Input
-          id='password'
-          icon={<FaLock />}
-          type='password'
-          label='Password'
+          containerClassName='mb-4'
+          id='username'
+          icon={<FaUser />}
+          type='text'
+          label='Username'
           autoComplete='off'
-          containerClassName='w-full max-md:mb-4'
-          value={formData.password}
-          onChange={(e) => handleChange('password', e.target.value)}
+          value={formData.username}
+          onChange={(e) => handleChange('username', e.target.value)}
         />
 
         <Input
-          id='confirm-password'
-          icon={<FaLock />}
-          type='password'
-          label='Confirm Password'
+          containerClassName='mb-4'
+          id='email'
+          icon={<MdMail />}
+          type='email'
+          label='Email'
           autoComplete='off'
-          containerClassName='w-full'
-          value={formData.confirmPassword}
-          onChange={(e) => handleChange('confirmPassword', e.target.value)}
+          value={formData.email}
+          onChange={(e) => handleChange('email', e.target.value)}
         />
-      </div>
 
-      <Button className='block mx-auto' color='primary' variant='filled'>
-        Register
-      </Button>
+        <div className='mb-6 md:flex md:justify-between md:gap-x-4'>
+          <Input
+            id='password'
+            icon={<FaLock />}
+            type='password'
+            label='Password'
+            autoComplete='off'
+            containerClassName='w-full max-md:mb-4'
+            value={formData.password}
+            onChange={(e) => handleChange('password', e.target.value)}
+          />
 
-      <div className='mt-4 text-center lg:hidden'>
-        <span className='text-white/75'>Already have an account? </span>
-        <Link className='text-success hover:underline' to='/signin' replace>
-          Sign In
-        </Link>
-      </div>
+          <Input
+            id='confirm-password'
+            icon={<FaLock />}
+            type='password'
+            label='Confirm Password'
+            autoComplete='off'
+            containerClassName='w-full'
+            value={formData.confirmPassword}
+            onChange={(e) => handleChange('confirmPassword', e.target.value)}
+          />
+        </div>
+
+        <Button className='block mx-auto' color='primary' variant='filled'>
+          Register
+        </Button>
+
+        <div className='mt-4 text-center lg:hidden'>
+          <span className='text-white/75'>Already have an account? </span>
+          <Link className='text-success hover:underline' to='/signin' replace>
+            Sign In
+          </Link>
+        </div>
+      </fieldset>
     </form>
   );
 };

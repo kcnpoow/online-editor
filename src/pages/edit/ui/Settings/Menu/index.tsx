@@ -23,6 +23,13 @@ export const Menu = ({ currentTab, setCurrentTab }: Props) => {
         >
           Privacy
         </MenuItem>
+
+        <MenuItem
+          isActive={currentTab === 'collab'}
+          onClick={() => setCurrentTab('collab')}
+        >
+          Collab
+        </MenuItem>
       </ul>
     </nav>
   );

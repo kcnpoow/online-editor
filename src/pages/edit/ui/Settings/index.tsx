@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { Menu } from './Menu';
 import { Behavior, Privacy } from './Tabs';
+import { Collab } from './Tabs/Collab';
 import { SettingsTabs } from '@pages/edit/model';
 import { Button } from '@shared/ui/Button';
 import { Modal } from '@shared/ui/Modal';
@@ -20,6 +21,8 @@ export const Settings = ({ isSettingsOpen, onSettingsClose }: Props) => {
         return <Behavior />;
       case 'privacy':
         return <Privacy />;
+      case 'collab':
+        return <Collab />;
     }
   };
 

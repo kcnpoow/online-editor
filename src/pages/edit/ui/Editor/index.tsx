@@ -52,7 +52,7 @@ export const Editor = () => {
             minSize={10}
           >
             <CodeEditor
-              title='HTML'
+              field='html'
               language={html()}
               value={editorState.html}
               onChange={(value: string) => onEditorStateChange('html', value)}
@@ -66,7 +66,7 @@ export const Editor = () => {
             minSize={10}
           >
             <CodeEditor
-              title='CSS'
+              field='css'
               language={css()}
               value={editorState.css}
               onChange={(value: string) => onEditorStateChange('css', value)}
@@ -80,7 +80,7 @@ export const Editor = () => {
             minSize={10}
           >
             <CodeEditor
-              title='JS'
+              field='js'
               language={javascript()}
               value={editorState.js}
               onChange={(value: string) => onEditorStateChange('js', value)}

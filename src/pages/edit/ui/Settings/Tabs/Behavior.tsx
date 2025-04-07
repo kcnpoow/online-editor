@@ -1,10 +1,10 @@
 import { SettingsRow } from './SettingsRow';
-import { Switch } from '@shared/ui/Swtich';
+import { Switch } from '@shared/ui/Switch';
 
 import { useEdit } from '@pages/edit/lib/useEdit';
 
 export const Behavior = () => {
-  const { editorSettings, onEditorSettingsChange } = useEdit();
+  const { editorState, onEditorStateChange } = useEdit();
 
   return (
     <section>
@@ -14,11 +14,18 @@ export const Behavior = () => {
         disabled, use the "Run" button to update.'
       >
         <Switch
-          checked={editorSettings.autoUpdate}
+          checked={editorState.autoUpdate}
           onChange={() =>
-            onEditorSettingsChange('autoUpdate', !editorSettings.autoUpdate)
+            onEditorStateChange('autoUpdate', !editorState.autoUpdate)
           }
         />
+      </SettingsRow>
+
+      <SettingsRow
+        title='Auto Save'
+        hint='If enabled, your changes will be automatically saved as you work. If disabled, you will need to manually save your progress.'
+      >
+        <Switch onChange={() => null} />
       </SettingsRow>
     </section>
   );

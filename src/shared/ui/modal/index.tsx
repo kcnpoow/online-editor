@@ -43,6 +43,8 @@ const Modal = ({ isOpen, onClose, children, className }: Props) => {
         isOpen ? '' : 'hidden'
       )}
       tabIndex={1}
+      role='dialog'
+      aria-modal='true'
       onClick={handleBackdropClick}
     >
       <div

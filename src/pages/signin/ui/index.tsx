@@ -6,6 +6,7 @@ import { Input } from '@shared/ui/Input';
 import { Button } from '@shared/ui/Button';
 import { Alert } from '@shared/ui/Alert';
 import { authApi } from '@shared/api/AuthApi';
+import { useAuth } from '@shared/hooks/useAuth';
 
 const initialFormData = {
   username: '',
@@ -22,6 +23,7 @@ export const Signin = () => {
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState(initialErrors);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { setUser } = useAuth();
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({
@@ -45,10 +47,11 @@ export const Signin = () => {
     try {
       const result = await authApi.signin(formData.username, formData.password);
 
-      console.log(result);
+      setUser(result);
     } catch (error) {
       setErrors((prev) => ({
         ...prev,
+        generalError: 'Incorrect username or password',
       }));
     } finally {
       setIsSubmitting(false);
@@ -56,67 +59,66 @@ export const Signin = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className='place-content-center h-full py-4 px-30 bg-secondary'
-    >
-      <h1 className='text-white text-3xl text-center font-bold'>Sign In</h1>
+    <form onSubmit={handleSubmit} className='content-center h-full'>
+      <fieldset
+        className='flex flex-col max-w-105 p-4 mx-auto'
+        disabled={isSubmitting}
+      >
+        <h1 className='text-white text-3xl text-center font-bold'>Sign In</h1>
 
-      <Input
-        id='username'
-        icon={<FaUser />}
-        type='text'
-        label='Username'
-        containerClassName='mb-4'
-        autoComplete='off'
-        value={formData.username}
-        onChange={(e) => handleChange('username', e.target.value)}
-        error={errors.username}
-      />
+        <Input
+          id='username'
+          icon={<FaUser />}
+          type='text'
+          label='Username'
+          containerClassName='mb-4'
+          autoComplete='off'
+          value={formData.username}
+          onChange={(e) => handleChange('username', e.target.value)}
+          error={errors.username}
+        />
 
-      <Input
-        id='password'
-        icon={<FaLock />}
-        type='password'
-        label='Password'
-        autoComplete='off'
-        containerClassName='mb-2'
-        value={formData.password}
-        onChange={(e) => handleChange('password', e.target.value)}
-        error={errors.password}
-      />
+        <Input
+          id='password'
+          icon={<FaLock />}
+          type='password'
+          label='Password'
+          autoComplete='off'
+          containerClassName='mb-2'
+          value={formData.password}
+          onChange={(e) => handleChange('password', e.target.value)}
+          error={errors.password}
+        />
 
-      <div className='flex justify-end mb-6'>
         <Link
-          className='block ml-auto text-white/75 hover:underline hover:text-white'
+          className='block ml-auto mb-6 text-white/75 hover:underline hover:text-white'
           to='#'
         >
           Forgot password?
         </Link>
-      </div>
 
-      {errors.generalError && (
-        <Alert className='my-6' variant='error'>
-          {errors.generalError}
-        </Alert>
-      )}
+        {errors.generalError && (
+          <Alert className='my-6' variant='error'>
+            {errors.generalError}
+          </Alert>
+        )}
 
-      <Button
-        className='block mx-auto'
-        color='primary'
-        variant='filled'
-        type='submit'
-        disabled={isSubmitting}
-      >
-        Login
-      </Button>
+        <Button
+          className='mx-auto'
+          color='primary'
+          variant='filled'
+          type='submit'
+        >
+          Login
+        </Button>
 
-      <div className='mt-4 text-center lg:hidden'>
-        <span className='text-white/75'>Don't have an account? </span>
-        <Link className='text-success hover:underline' to='/signup' replace>
-          Sign Up
-        </Link>
-      </div>
+        <div className='mt-4 text-center lg:hidden'>
+          <span className='text-white/75'>Don't have an account? </span>
+          <Link className='text-success hover:underline' to='/signup' replace>
+            Sign Up
+          </Link>
+        </div>
+      </fieldset>
     </form>
   );
 };

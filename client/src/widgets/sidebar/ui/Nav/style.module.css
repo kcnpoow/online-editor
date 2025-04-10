@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+
+.navLink {
+  @apply block py-3 px-8 cursor-pointer;
+}
+
+.navLink:hover {
+  @apply bg-[#131417];
+}
+
+.navLinkActive {
+  @apply bg-[#131417];
+}

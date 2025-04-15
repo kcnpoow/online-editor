@@ -1,26 +1,48 @@
 import { SettingsRow } from './SettingsRow';
-import { useEdit } from '@pages/edit/lib/useEdit';
 import { Switch } from '@shared/ui/Switch';
 import { Clipper } from '@shared/ui/Clipper';
+import { useSettings } from '@pages/edit/model/SettingsContext';
+import { useCollab } from '@pages/edit/model/CollabContext';
+import { generateRoomId } from '@pages/edit/lib/generateRoomId';
+import { socket } from '@shared/config/socket';
 
 export const Collab = () => {
-  const { editorState, onEditorStateChange } = useEdit();
+  const { collabMode, setCollabMode } = useSettings();
+  const { roomId, setRoomId } = useCollab();
+
+  const handleCollabModeChange = () => {
+    const newCollabMode = !collabMode;
+
+    if (newCollabMode) {
+      const roomId = generateRoomId();
+
+      socket.emit('join-room', roomId);
+
+      setCollabMode(newCollabMode);
+      setRoomId(roomId);
+    } else {
+      socket.emit('leave-room', roomId);
+
+      setCollabMode(newCollabMode);
+      setRoomId('');
+    }
+  };
+
+  const collaborationLink = `localhost:5173/edit?roomId=${roomId}`;
 
   return (
     <section>
-      <SettingsRow title='Collaborative Work' hint='Collab with your friends.'>
+      <SettingsRow
+        title='Collaborative Work'
+        hint='Enable real-time collaboration to work on the same code together.'
+      >
         <Switch
-          checked={editorState.collabMode}
-          onChange={() =>
-            onEditorStateChange('collabMode', !editorState.collabMode)
-          }
+          className='mb-2'
+          checked={collabMode}
+          onChange={handleCollabModeChange}
         />
 
-        {editorState.collabMode && editorState.collabId && (
-          <div>
-            <Clipper text={editorState.collabId} />
-          </div>
-        )}
+        {collabMode && <Clipper>{collaborationLink}</Clipper>}
       </SettingsRow>
     </section>
   );

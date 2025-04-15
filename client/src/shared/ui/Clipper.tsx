@@ -1,23 +1,39 @@
+import { useRef, useState } from 'react';
+import { IoCopy, IoCheckmark } from 'react-icons/io5';
+
 type Props = {
-  text: string;
+  children: string;
 };
 
-export const Clipper = ({ text }: Props) => {
-  const formattedText = `localhost:5173/edit?collabId=${text}`;
+export const Clipper = ({ children }: Props) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isCopied, setIsCopied] = useState(false);
 
   const handleClick = () => {
-    navigator.clipboard.writeText(formattedText);
+    navigator.clipboard.writeText(children);
 
-    alert('clipped');
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 1000);
+
+    if (inputRef.current) {
+      inputRef.current.select();
+    }
   };
 
   return (
-    <input
-      className='w-full'
-      type='text'
-      readOnly
-      value={formattedText}
-      onClick={handleClick}
-    />
+    <div className='relative'>
+      <input
+        ref={inputRef}
+        className='w-full p-2 pr-8 text-black bg-white rounded-md'
+        type='text'
+        readOnly
+        value={children}
+        onClick={handleClick}
+      />
+
+      <div className='absolute top-1/2 right-2 -translate-y-1/2 text-black pointer-events-none'>
+        {isCopied ? <IoCheckmark /> : <IoCopy />}
+      </div>
+    </div>
   );
 };

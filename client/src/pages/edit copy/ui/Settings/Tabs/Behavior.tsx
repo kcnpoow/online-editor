@@ -1,9 +1,10 @@
-import { useSettings } from '@pages/edit/model/SettingsContext';
 import { SettingsRow } from './SettingsRow';
 import { Switch } from '@shared/ui/Switch';
 
+import { useEdit } from '@pages/edit/lib/useEdit';
+
 export const Behavior = () => {
-  const { autoUpdate, setAutoUpdate } = useSettings();
+  const { editorState, onEditorStateChange } = useEdit();
 
   return (
     <section>
@@ -13,8 +14,14 @@ export const Behavior = () => {
         disabled, use the "Run" button to update.'
       >
         <Switch
-          checked={autoUpdate}
-          onChange={() => setAutoUpdate(!autoUpdate)}
+          checked={editorState.settings.autoUpdate}
+          onChange={() =>
+            onEditorStateChange(
+              'settings',
+              'autoUpdate',
+              !editorState.settings.autoUpdate
+            )
+          }
         />
       </SettingsRow>
 

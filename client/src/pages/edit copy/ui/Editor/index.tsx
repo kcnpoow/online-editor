@@ -6,23 +6,13 @@ import { javascript } from '@codemirror/lang-javascript';
 import cn from 'classnames';
 
 import { Tab } from './Tab';
+import { EditorField } from '@pages/edit/model/types';
 import { CustomPanelResizeHandle } from './CustomPanelResizeHandle';
 import { CodeEditor } from './CodeEditor';
-import { useEditor } from '@pages/edit/model/EditorContext';
-import { EditorField } from '@pages/edit/model/types';
+import { useEdit } from '@pages/edit/lib/useEdit';
 
-type Props = { output: string };
-
-export const Editor = ({ output }: Props) => {
-  const {
-    htmlCode,
-    cssCode,
-    jsCode,
-    setHtmlCode,
-    setCssCode,
-    setJsCode,
-  } = useEditor();
-
+export const Editor = () => {
+  const { editorState, onEditorStateChange } = useEdit();
   // Mobile version states
   const [isResultActive, setIsResultActive] = useState(true);
   const [currentEditor, setCurrentEditor] = useState<EditorField>('html');
@@ -63,10 +53,11 @@ export const Editor = ({ output }: Props) => {
             minSize={10}
           >
             <CodeEditor
+              key={currentEditor}
               field='html'
               language={html()}
-              value={htmlCode}
-              onChange={(text) => setHtmlCode(text)}
+              value={editorState.code.html}
+              onChange={(text) => onEditorStateChange('code', 'html', text)}
             />
           </Panel>
 
@@ -77,10 +68,11 @@ export const Editor = ({ output }: Props) => {
             minSize={10}
           >
             <CodeEditor
+              key={currentEditor}
               field='css'
               language={css()}
-              value={cssCode}
-              onChange={(text) => setCssCode(text)}
+              value={editorState.code.css}
+              onChange={(text) => onEditorStateChange('code', 'css', text)}
             />
           </Panel>
 
@@ -91,10 +83,11 @@ export const Editor = ({ output }: Props) => {
             minSize={10}
           >
             <CodeEditor
+              key={currentEditor}
               field='js'
               language={javascript()}
-              value={jsCode}
-              onChange={(text) => setJsCode(text)}
+              value={editorState.code.js}
+              onChange={(text) => onEditorStateChange('code', 'js', text)}
             />
           </Panel>
         </PanelGroup>
@@ -106,7 +99,7 @@ export const Editor = ({ output }: Props) => {
         <iframe
           width='100%'
           height='100%'
-          srcDoc={output}
+          srcDoc={editorState.code.output}
           sandbox='allow-scripts'
           title='output'
         />

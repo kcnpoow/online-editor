@@ -1,9 +1,9 @@
 import { SettingsRow } from './SettingsRow';
 import { Switch } from '@shared/ui/Switch';
-import { useSettings } from '@pages/edit/model/SettingsContext';
+import { useEdit } from '@pages/edit/lib/useEdit';
 
 export const Privacy = () => {
-  const { privateMode } = useSettings();
+  const { editorState, onEditorStateChange } = useEdit();
 
   return (
     <section>
@@ -11,7 +11,10 @@ export const Privacy = () => {
         title='Direct Link Access'
         hint='If this option is enabled, users can access the content only through a direct link, ensuring it remains hidden from others without the URL.'
       >
-        <Switch checked={privateMode} />
+        <Switch
+          checked={editorState.private}
+          onChange={() => onEditorStateChange('private', !editorState.private)}
+        />
       </SettingsRow>
     </section>
   );

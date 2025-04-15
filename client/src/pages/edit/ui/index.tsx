@@ -4,74 +4,84 @@ import { useSearchParams } from 'react-router';
 import { Header } from './Header';
 import { Editor } from './Editor';
 import { Settings } from './Settings';
-import { useEdit } from '../lib/useEdit';
-import { EditorStateFields, EditProvider } from '../model';
+import { SettingsProvider, useSettings } from '../model/SettingsContext';
+import { EditorProvider } from '../model/EditorContext';
+import { CollabProvider, useCollab } from '../model/CollabContext';
+import { useEditor } from '../model/EditorContext';
+import { generateOutput } from '@pages/edit copy/lib/generateOutput';
 import { socket } from '@shared/config/socket';
-import { generateCollabId } from '../test/generateCollabLink';
+import { Cursor } from '../model/types';
+import { useDebounce } from '@shared/hooks/useDebounce';
 
-const Wrapper = () => {
-  const { editorState, onEditorStateChange } = useEdit();
+const Edit = () => {
+  const [searchParams] = useSearchParams();
+  const [output, setOutput] = useState('');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [searchParams, _] = useSearchParams();
+  const { htmlCode, cssCode, jsCode } = useEditor();
+  const { setCursors } = useCollab();
+  const { autoUpdate } = useSettings();
 
-  const handleTextChange = ({
-    text,
-    field,
-  }: {
-    text: string;
-    field: EditorStateFields;
-  }) => {
-    console.log(text);
-    onEditorStateChange(field, text);
+  const handleExecute = () => {
+    setOutput(generateOutput(htmlCode, cssCode, jsCode));
   };
 
+  const handleExecuteDebounced = useDebounce(handleExecute, 1000);
+
   useEffect(() => {
-    socket.on('text-change', handleTextChange);
+    const handleCursorMove = (cursors: Cursor[]) => {
+      setCursors(cursors);
+    };
+
+    socket.on('cursor-move', handleCursorMove);
 
     return () => {
-      socket.off('text-change', handleTextChange);
+      socket.off('cursor-move', handleCursorMove);
     };
+  }, [setCursors]);
+
+  // Join collab room if roomId is provided
+  useEffect(() => {
+    const roomId = searchParams.get('roomId');
+
+    if (roomId) {
+      socket.emit('join-room', roomId);
+    }
   }, []);
 
-  // Join to room when user enters via link
+  // Auto update output
   useEffect(() => {
-    const collabId = searchParams.get('collabId');
-
-    if (collabId) {
-      socket.emit('join-room', collabId);
-      onEditorStateChange('collabId', collabId);
+    if (autoUpdate) {
+      handleExecuteDebounced();
     }
-  }, [searchParams]);
-
-  // Join to room when user enables collaborative work mode
-  useEffect(() => {
-    if (editorState.collabMode) {
-      const collabId = generateCollabId();
-
-      socket.emit('join-room', collabId);
-
-      onEditorStateChange('collabId', collabId);
-    }
-  }, [editorState.collabMode]);
+  }, [htmlCode, cssCode, jsCode, autoUpdate]);
 
   return (
     <div className='flex flex-col h-screen text-white bg-black'>
+      <Header
+        onSettingsOpen={() => setIsSettingsOpen(true)}
+        onExecute={handleExecute}
+      />
+
       <Settings
         isSettingsOpen={isSettingsOpen}
         onSettingsClose={() => setIsSettingsOpen(false)}
       />
 
-      <Header onSettingsOpen={() => setIsSettingsOpen(true)} />
-
-      <Editor />
+      <Editor output={output} />
     </div>
   );
 };
 
-export const Edit = () => {
+const EditWithProviders = () => {
   return (
-    <EditProvider>
-      <Wrapper />
-    </EditProvider>
+    <SettingsProvider>
+      <EditorProvider>
+        <CollabProvider>
+          <Edit />
+        </CollabProvider>
+      </EditorProvider>
+    </SettingsProvider>
   );
 };
+
+export { EditWithProviders as Edit };

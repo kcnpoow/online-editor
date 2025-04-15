@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
 import { Menu } from './Menu';
-import { Behavior, Privacy, Collab } from './Tabs';
+import { Behavior, Privacy } from './Tabs';
+import { Collab } from './Tabs/Collab';
 import { SettingsTab } from '@pages/edit/model/types';
 import { Button } from '@shared/ui/Button';
 import { Modal } from '@shared/ui/Modal';

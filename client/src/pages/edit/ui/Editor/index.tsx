@@ -1,34 +1,35 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { PanelGroup, Panel } from 'react-resizable-panels';
-import { html } from '@codemirror/lang-html';
-import { css } from '@codemirror/lang-css';
-import { javascript } from '@codemirror/lang-javascript';
+import { html as htmlExt } from '@codemirror/lang-html';
+import { css as cssExt } from '@codemirror/lang-css';
+import { javascript as jsExt } from '@codemirror/lang-javascript';
 import cn from 'classnames';
-
 import { Tab } from './Tab';
 import { CustomPanelResizeHandle } from './CustomPanelResizeHandle';
 import { CodeEditor } from './CodeEditor';
-import { useEditor } from '@pages/edit/model/EditorContext';
+import { useCollab } from '@pages/edit/model/CollabContext';
 import { EditorField } from '@pages/edit/model/types';
+import { useEditor } from '@pages/edit/model/EditorContext';
 
-type Props = { output: string };
-
-export const Editor = ({ output }: Props) => {
-  const {
-    htmlCode,
-    cssCode,
-    jsCode,
-    setHtmlCode,
-    setCssCode,
-    setJsCode,
-  } = useEditor();
+export const Editor = () => {
+  const { html, css, js, handleDocumentChange } = useEditor();
+  const { roomId, setCursors } = useCollab();
 
   // Mobile version states
   const [isResultActive, setIsResultActive] = useState(true);
   const [currentEditor, setCurrentEditor] = useState<EditorField>('html');
 
+  const htmlLang = useMemo(() => htmlExt(), []);
+  const cssLang = useMemo(() => cssExt(), []);
+  const jsLang = useMemo(() => jsExt(), []);
+
+  const handlePanelResize = () => {
+    setCursors([]); // reset cursors on resize
+  };
+
   return (
     <PanelGroup direction='vertical'>
+      {/* Mobile version menu */}
       <ul className='flex gap-x-0.5 px-2 pt-2 md:hidden'>
         <Tab
           onClick={() => setCurrentEditor('html')}
@@ -61,12 +62,13 @@ export const Editor = ({ output }: Props) => {
           <Panel
             className={cn({ 'max-md:hidden': currentEditor !== 'html' })}
             minSize={10}
+            onResize={handlePanelResize}
           >
             <CodeEditor
               field='html'
-              language={html()}
-              value={htmlCode}
-              onChange={(text) => setHtmlCode(text)}
+              language={htmlLang}
+              value={html}
+              onChange={(text) => handleDocumentChange(roomId, 'html', text)}
             />
           </Panel>
 
@@ -75,12 +77,13 @@ export const Editor = ({ output }: Props) => {
           <Panel
             className={cn({ 'max-md:hidden': currentEditor !== 'css' })}
             minSize={10}
+            onResize={handlePanelResize}
           >
             <CodeEditor
               field='css'
-              language={css()}
-              value={cssCode}
-              onChange={(text) => setCssCode(text)}
+              language={cssLang}
+              value={css}
+              onChange={(text) => handleDocumentChange(roomId, 'css', text)}
             />
           </Panel>
 
@@ -89,12 +92,13 @@ export const Editor = ({ output }: Props) => {
           <Panel
             className={cn({ 'max-md:hidden': currentEditor !== 'js' })}
             minSize={10}
+            onResize={handlePanelResize}
           >
             <CodeEditor
               field='js'
-              language={javascript()}
-              value={jsCode}
-              onChange={(text) => setJsCode(text)}
+              language={jsLang}
+              value={js}
+              onChange={(text) => handleDocumentChange(roomId, 'js', text)}
             />
           </Panel>
         </PanelGroup>
@@ -102,13 +106,16 @@ export const Editor = ({ output }: Props) => {
 
       <CustomPanelResizeHandle direction='horizontal' />
 
-      <Panel className={cn('bg-white', { 'max-md:hidden': !isResultActive })}>
+      <Panel
+        className={cn('bg-white', { 'max-md:hidden': !isResultActive })}
+        onResize={handlePanelResize}
+      >
         <iframe
           width='100%'
           height='100%'
-          srcDoc={output}
           sandbox='allow-scripts'
           title='output'
+          srcDoc={''}
         />
       </Panel>
     </PanelGroup>

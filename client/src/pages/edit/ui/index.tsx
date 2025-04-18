@@ -1,62 +1,46 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { useSearchParams } from 'react-router';
 
 import { Header } from './Header';
-import { Editor } from './Editor';
 import { Settings } from './Settings';
+import { Editor } from './Editor';
 import { SettingsProvider, useSettings } from '../model/SettingsContext';
 import { EditorProvider } from '../model/EditorContext';
 import { CollabProvider, useCollab } from '../model/CollabContext';
-import { useEditor } from '../model/EditorContext';
-import { generateOutput } from '@pages/edit copy/lib/generateOutput';
-import { socket } from '@shared/config/socket';
-import { Cursor } from '../model/types';
+import { collabService } from '../api/CollabService';
 import { useDebounce } from '@shared/hooks/useDebounce';
 
-const Edit = () => {
+const Edit = memo(() => {
   const [searchParams] = useSearchParams();
-  const [output, setOutput] = useState('');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const { htmlCode, cssCode, jsCode } = useEditor();
-  const { setCursors } = useCollab();
-  const { autoUpdate } = useSettings();
+  const { autoUpdate, setCollabMode } = useSettings();
+  const { setRoomId } = useCollab();
 
-  const handleExecute = () => {
-    setOutput(generateOutput(htmlCode, cssCode, jsCode));
-  };
+  const handleExecute = () => {};
 
   const handleExecuteDebounced = useDebounce(handleExecute, 1000);
 
-  useEffect(() => {
-    const handleCursorMove = (cursors: Cursor[]) => {
-      setCursors(cursors);
-    };
-
-    socket.on('cursor-move', handleCursorMove);
-
-    return () => {
-      socket.off('cursor-move', handleCursorMove);
-    };
-  }, [setCursors]);
-
-  // Join collab room if roomId is provided
+  // Join room via roomId from link
   useEffect(() => {
     const roomId = searchParams.get('roomId');
 
     if (roomId) {
-      socket.emit('join-room', roomId);
-    }
-  }, []);
+      collabService.join(roomId);
 
-  // Auto update output
+      setCollabMode(true);
+      setRoomId(roomId);
+    }
+  }, [searchParams, setCollabMode, setRoomId]);
+
+  // TODO: Complete
   useEffect(() => {
     if (autoUpdate) {
       handleExecuteDebounced();
     }
-  }, [htmlCode, cssCode, jsCode, autoUpdate]);
+  }, [autoUpdate]);
 
   return (
-    <div className='flex flex-col h-screen text-white bg-black'>
+    <div className='relative overflow-hidden flex flex-col h-screen text-white bg-black'>
       <Header
         onSettingsOpen={() => setIsSettingsOpen(true)}
         onExecute={handleExecute}
@@ -67,10 +51,10 @@ const Edit = () => {
         onSettingsClose={() => setIsSettingsOpen(false)}
       />
 
-      <Editor output={output} />
+      <Editor />
     </div>
   );
-};
+});
 
 const EditWithProviders = () => {
   return (

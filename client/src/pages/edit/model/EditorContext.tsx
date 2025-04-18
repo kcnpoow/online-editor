@@ -1,39 +1,105 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+} from 'react';
+import * as automerge from 'automerge';
+
+import { EditorField } from './types';
+import { collabService } from '../api/CollabService';
 
 type EditorContextValue = {
-  htmlCode: string;
-  setHtmlCode: (value: string) => void;
+  html: string;
+  setHtml: Dispatch<SetStateAction<string>>;
 
-  cssCode: string;
-  setCssCode: (value: string) => void;
+  css: string;
+  setCss: Dispatch<SetStateAction<string>>;
 
-  jsCode: string;
-  setJsCode: (value: string) => void;
+  js: string;
+  setJs: Dispatch<SetStateAction<string>>;
+
+  handleDocumentChange: (
+    roomId: string,
+    field: EditorField,
+    text: string
+  ) => void;
 };
 
-const EditorContext = createContext<EditorContextValue>(
-  {} as EditorContextValue
-);
+const EditorContext = createContext<EditorContextValue | null>(null);
+
+let htmlDoc = automerge.init();
+let cssDoc = automerge.init();
+let jsDoc = automerge.init();
 
 export const EditorProvider = ({ children }: { children: ReactNode }) => {
-  const [htmlCode, setHtmlCode] = useState('');
-  const [cssCode, setCssCode] = useState('');
-  const [jsCode, setJsCode] = useState('');
+  const [html, setHtml] = useState('');
+  const [css, setCss] = useState('');
+  const [js, setJs] = useState('');
+
+  const handleDocumentChange = (
+    roomId: string,
+    field: EditorField,
+    text: string
+  ) => {
+    let oldDoc: automerge.Doc<any>;
+    let newDoc: automerge.Doc<any>;
+
+    if (field === 'html') {
+      oldDoc = htmlDoc;
+      newDoc = automerge.change(oldDoc, 'edit html', (doc) => {
+        doc.content = text;
+      });
+      htmlDoc = newDoc;
+    } else if (field === 'css') {
+      oldDoc = cssDoc;
+      newDoc = automerge.change(oldDoc, 'edit css', (doc) => {
+        doc.content = text;
+      });
+      cssDoc = newDoc;
+    } else if (field === 'js') {
+      oldDoc = jsDoc;
+      newDoc = automerge.change(oldDoc, 'edit js', (doc) => {
+        doc.content = text;
+      });
+      jsDoc = newDoc;
+    } else {
+      return;
+    }
+
+    const changes = automerge.getChanges(oldDoc, newDoc);
+    collabService.update(roomId, field, changes);
+  };
+
+  useEffect(() => {
+    collabService.onUpdate(({ field, doc }) => {
+      if (field === 'html') {
+        console.log(htmlDoc, doc);
+
+        htmlDoc = automerge.merge(html, doc);
+      }
+    });
+  }, []);
 
   return (
     <EditorContext.Provider
-      value={{
-        htmlCode,
-        setHtmlCode,
-        cssCode,
-        setCssCode,
-        jsCode,
-        setJsCode,
-      }}
+      value={{ html, setHtml, css, setCss, js, setJs, handleDocumentChange }}
     >
       {children}
     </EditorContext.Provider>
   );
 };
 
-export const useEditor = () => useContext(EditorContext);
+export const useEditor = () => {
+  const context = useContext(EditorContext);
+
+  if (!context)
+    throw new Error(
+      'useEditorCollab must be used within a EditorCollabProvider'
+    );
+
+  return context;
+};

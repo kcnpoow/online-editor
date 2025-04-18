@@ -3,7 +3,7 @@ import { FaHeart, FaCommentAlt, FaEye } from 'react-icons/fa';
 import { Chip } from './Chip';
 export const DraftCard = () => {
   return (
-    <figure className='relative p-4 pb-2'>
+    <figure className='relative p-4 pb-2 cursor-pointer'>
       <div className='group peer relative z-10'>
         <img src='https://assets.codepen.io/416221/internal/screenshots/pens/PlMnOq.custom.png' />
         <div className='flex items-center pt-2 mb-1'>

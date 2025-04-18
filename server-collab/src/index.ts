@@ -1,86 +1,59 @@
 import { Server } from 'socket.io';
-import { Cursor, Room } from './types/Collab';
+import automerge from 'automerge';
 
-const rooms: Record<string, Room> = {};
+import { EditorField, Room } from './types/Collab';
 
 const io = new Server({
   cors: {
-    origin: 'http://localhost:5173',
+    origin: '*',
   },
 });
 
-io.on('connection', (socket) => {
-  console.log(`🔌 User connected: ${socket.id}`);
+const rooms: Record<string, Room> = {};
 
-  socket.on('join-room', (roomId: string) => {
-    socket.join(roomId);
+io.on('connection', (socket) => {
+  let currentRoom = '';
+  let currentUser = '';
+
+  socket.on('join', (roomId) => {
+    currentRoom = roomId;
+    currentUser = socket.id;
 
     if (!rooms[roomId]) {
       rooms[roomId] = {
-        users: [],
-        cursors: {},
+        users: [currentUser],
+        cursors: [],
+        editors: {
+          html: automerge.init(),
+          css: automerge.init(),
+          js: automerge.init(),
+        },
       };
     }
 
-    rooms[roomId].users.push(socket.id);
-
-    console.log(`👥 ${socket.id} joined room: ${roomId}`);
+    socket.join(currentRoom);
   });
 
-  socket.on('leave-room', (roomId: string) => {
-    socket.leave(roomId);
+  socket.on(
+    'update',
+    (roomId: string, field: EditorField, changes: automerge.Change[]) => {
+      const room = rooms[roomId];
 
-    const room = rooms[roomId];
-    if (room) {
-      room.users = room.users.filter((id) => id !== socket.id);
-      delete room.cursors[socket.id];
+      if (room) {
+        let doc = room.editors[field];
 
-      if (room.users.length === 0) {
-        delete rooms[roomId];
-        console.log(`🧹 Room ${roomId} deleted (empty).`);
+        doc = automerge.applyChanges(doc, changes);
+
+        room.editors[field] = doc;
+
+        io.to(roomId).emit('update', { field, doc });
       }
     }
+  );
 
-    console.log(`🚪 ${socket.id} left room: ${roomId}`);
-  });
-
-  socket.on('cursor-move', (roomId: string, cursor: Cursor) => {
-    const room = rooms[roomId];
-    if (!room) return;
-
-    room.cursors[cursor.user] = cursor;
-
-    // Broadcast updated cursor positions to all in the room
-    io.to(roomId).emit('cursor-move', Object.values(room.cursors));
-  });
-
-  socket.on('text-change', (roomId: string, field: string, text: string) => {
-    io.to(roomId).emit('text-change', field, text);
-  });
-
-  socket.on('disconnect', () => {
-    console.log(`❌ User disconnected: ${socket.id}`);
-
-    // Clean up the user from all rooms
-    for (const [roomId, room] of Object.entries(rooms)) {
-      const wasInRoom = room.users.includes(socket.id);
-      if (wasInRoom) {
-        room.users = room.users.filter((id) => id !== socket.id);
-        delete room.cursors[socket.id];
-
-        io.to(roomId).emit('cursor-move', Object.values(room.cursors));
-
-        if (room.users.length === 0) {
-          delete rooms[roomId];
-          console.log(`🧹 Room ${roomId} deleted (empty).`);
-        }
-
-        console.log(`👋 ${socket.id} removed from room: ${roomId}`);
-      }
-    }
-  });
+  console.log(`User connected: ${socket.id}`);
 });
 
-const PORT = 3000;
+const PORT = 2222;
 io.listen(PORT);
-console.log(`🚀 Server is running on http://localhost:${PORT}`);
+console.log(`Socket.IO server running on port ${PORT}`);

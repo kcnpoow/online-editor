@@ -47,7 +47,7 @@ export const Home = () => {
             <CodeContainer
               title='HTML'
               titleColor='#E27445'
-              className='max-lg:left-2/10 lg:right-5 -top-5'
+              className='max-lg:left-1/10 lg:right-5 -top-5'
             >
               <HtmlAnimation />
             </CodeContainer>
@@ -142,11 +142,11 @@ export const Home = () => {
             </div>
           </div>
 
-          <DraftCard to='/' />
-          <DraftCard to='/' />
-          <DraftCard to='/' />
-          <DraftCard to='/' />
-          <DraftCard to='/' />
+          <DraftCard />
+          <DraftCard />
+          <DraftCard />
+          <DraftCard />
+          <DraftCard />
         </div>
 
         <div className='flex justify-center'>

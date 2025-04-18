@@ -22,9 +22,13 @@ export const Header = ({ isNavbarOpened, toggleNavbar }: Props) => {
 
       <Search />
 
-      <div className='flex gap-x-2 ml-auto'>
+      <div className='flex gap-x-2 ml-auto whitespace-nowrap'>
         {user ? (
-          <Button className='max-md:p-2' color='secondary' onClick={() => setUser(null)}>
+          <Button
+            className='max-md:p-2'
+            color='secondary'
+            onClick={() => setUser(null)}
+          >
             Sign Out
           </Button>
         ) : (

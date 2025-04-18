@@ -1,17 +1,24 @@
 import { SelectionRange } from '@uiw/react-codemirror';
-import { FreezeObject } from 'automerge';
 
 export type EditorField = 'html' | 'css' | 'js';
 
+export type Editor = {
+  htmlCode: string;
+  cssCode: string;
+  jsCode: string;
+};
+
 export type Cursor = {
   user: string;
-  color: string;
   field: EditorField;
   selection: SelectionRange;
+  color?: string;
 };
 
 export type Room = {
+  htmlCode: string;
+  cssCode: string;
+  jsCode: string;
+  cursors: { [userId: string]: Cursor };
   users: string[];
-  cursors: Cursor[];
-  editors: Record<EditorField, FreezeObject<unknown>>;
 };

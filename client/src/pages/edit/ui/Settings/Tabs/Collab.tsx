@@ -3,8 +3,8 @@ import { Switch } from '@shared/ui/Switch';
 import { Clipper } from '@shared/ui/Clipper';
 import { useSettings } from '@pages/edit/model/SettingsContext';
 import { useCollab } from '@pages/edit/model/CollabContext';
+import { collabService } from '@pages/edit/api/CollabService';
 import { generateRoomId } from '@pages/edit/lib/generateRoomId';
-import { socket } from '@shared/config/socket';
 
 export const Collab = () => {
   const { collabMode, setCollabMode } = useSettings();
@@ -16,19 +16,15 @@ export const Collab = () => {
     if (newCollabMode) {
       const roomId = generateRoomId();
 
-      socket.emit('join-room', roomId);
+      collabService.join(roomId);
 
       setCollabMode(newCollabMode);
       setRoomId(roomId);
     } else {
-      socket.emit('leave-room', roomId);
-
       setCollabMode(newCollabMode);
       setRoomId('');
     }
   };
-
-  const collaborationLink = `localhost:5173/edit?roomId=${roomId}`;
 
   return (
     <section>
@@ -42,7 +38,9 @@ export const Collab = () => {
           onChange={handleCollabModeChange}
         />
 
-        {collabMode && <Clipper>{collaborationLink}</Clipper>}
+        {collabMode && (
+          <Clipper>{`localhost:5173/edit?roomId=${roomId}`}</Clipper>
+        )}
       </SettingsRow>
     </section>
   );

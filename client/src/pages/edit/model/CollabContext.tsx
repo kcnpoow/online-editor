@@ -1,32 +1,37 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useRef, useState } from 'react';
+import * as am from '@automerge/automerge';
 
-import { Cursor } from './types';
+import { AutomergeDoc, Cursor } from './types';
 
 export type CollabContextValue = {
   roomId: string;
-  connectedUsers: string[];
   cursors: Cursor[];
+  connectedUsers: string[];
   setRoomId: (id: string) => void;
-  setConnectedUsers: (users: string[]) => void;
   setCursors: (cursor: Cursor[]) => void;
+  setConnectedUsers: (users: string[]) => void;
+  docRef: React.MutableRefObject<am.Doc<AutomergeDoc> | null>;
 };
 
 const CollabContext = createContext<CollabContextValue | null>(null);
 
 export const CollabProvider = ({ children }: { children: React.ReactNode }) => {
   const [roomId, setRoomId] = useState('');
-  const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
   const [cursors, setCursors] = useState<Cursor[]>([]);
+  const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
+
+  const docRef = useRef<am.Doc<AutomergeDoc> | null>(null);
 
   return (
     <CollabContext.Provider
       value={{
         roomId,
-        connectedUsers,
         cursors,
+        connectedUsers,
         setRoomId,
-        setConnectedUsers,
         setCursors,
+        setConnectedUsers,
+        docRef,
       }}
     >
       {children}

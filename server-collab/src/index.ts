@@ -1,7 +1,7 @@
 import { Server } from 'socket.io';
-import automerge from 'automerge';
+import * as am from '@automerge/automerge';
 
-import { EditorField, Room } from './types/Collab';
+import { AutomergeDoc, EditorField, Room } from './types/collab';
 
 const io = new Server({
   cors: {
@@ -12,44 +12,33 @@ const io = new Server({
 const rooms: Record<string, Room> = {};
 
 io.on('connection', (socket) => {
-  let currentRoom = '';
-  let currentUser = '';
-
-  socket.on('join', (roomId) => {
-    currentRoom = roomId;
-    currentUser = socket.id;
-
+  socket.on('create', (roomId: string, initialDoc: AutomergeDoc) => {
     if (!rooms[roomId]) {
       rooms[roomId] = {
-        users: [currentUser],
+        users: [],
         cursors: [],
-        editors: {
-          html: automerge.init(),
-          css: automerge.init(),
-          js: automerge.init(),
-        },
+        doc: am.from(initialDoc),
       };
-    }
 
-    socket.join(currentRoom);
+      socket.join(roomId);
+    }
   });
 
-  socket.on(
-    'update',
-    (roomId: string, field: EditorField, changes: automerge.Change[]) => {
-      const room = rooms[roomId];
+  socket.on('join', (roomId: string) => {
+    console.log(roomId);
+  });
 
-      if (room) {
-        let doc = room.editors[field];
+  socket.on('update', (roomId: string, changes) => {
+    const room = rooms[roomId];
 
-        doc = automerge.applyChanges(doc, changes);
+    if (room) {
+      const [newDoc] = am.applyChanges(room.doc, changes);
 
-        room.editors[field] = doc;
+      room.doc = newDoc;
 
-        io.to(roomId).emit('update', { field, doc });
-      }
+      io.to(roomId).emit('update', newDoc);
     }
-  );
+  });
 
   console.log(`User connected: ${socket.id}`);
 });

@@ -1,17 +1,24 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+} from 'react';
 
 type SettingsContextValue = {
   privateMode: boolean;
-  setPrivateMode: (value: boolean) => void;
+  setPrivateMode: Dispatch<SetStateAction<boolean>>;
 
   collabMode: boolean;
-  setCollabMode: (value: boolean) => void;
+  setCollabMode: Dispatch<SetStateAction<boolean>>;
 
   autoUpdate: boolean;
-  setAutoUpdate: (value: boolean) => void;
+  setAutoUpdate: Dispatch<SetStateAction<boolean>>;
 
   autoSave: boolean;
-  setAutoSave: (value: boolean) => void;
+  setAutoSave: Dispatch<SetStateAction<boolean>>;
 };
 
 const SettingsContext = createContext<SettingsContextValue>(

@@ -12,8 +12,8 @@ import { EditorField } from '@pages/edit/model/types';
 import { useEditor } from '@pages/edit/model/EditorContext';
 
 export const Editor = () => {
-  const { html, css, js, handleDocumentChange } = useEditor();
-  const { roomId, setCursors } = useCollab();
+  const { html, css, js, setHtml, setCss, setJs } = useEditor();
+  const { setCursors } = useCollab();
 
   // Mobile version states
   const [isResultActive, setIsResultActive] = useState(true);
@@ -68,7 +68,7 @@ export const Editor = () => {
               field='html'
               language={htmlLang}
               value={html}
-              onChange={(text) => handleDocumentChange(roomId, 'html', text)}
+              onChange={(text) => setHtml(text)}
             />
           </Panel>
 
@@ -83,7 +83,7 @@ export const Editor = () => {
               field='css'
               language={cssLang}
               value={css}
-              onChange={(text) => handleDocumentChange(roomId, 'css', text)}
+              onChange={(text) => setCss(text)}
             />
           </Panel>
 
@@ -98,7 +98,7 @@ export const Editor = () => {
               field='js'
               language={jsLang}
               value={js}
-              onChange={(text) => handleDocumentChange(roomId, 'js', text)}
+              onChange={(text) => setJs(text)}
             />
           </Panel>
         </PanelGroup>

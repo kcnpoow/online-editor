@@ -8,3 +8,8 @@ export type Cursor = {
   selection: SelectionRange;
   color?: string;
 };
+export type AutomergeDoc = {
+  html: string;
+  css: string;
+  js: string;
+};

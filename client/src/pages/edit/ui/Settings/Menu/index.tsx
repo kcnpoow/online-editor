@@ -1,9 +1,9 @@
-import { SettingsTabs } from '@pages/edit/model/EditContext';
+import { SettingsTab } from '@pages/edit/model/types';
 import { MenuItem } from './MenuItem';
 
 type Props = {
-  currentTab: SettingsTabs;
-  setCurrentTab: (tab: SettingsTabs) => void;
+  currentTab: SettingsTab;
+  setCurrentTab: (tab: SettingsTab) => void;
 };
 
 export const Menu = ({ currentTab, setCurrentTab }: Props) => {
@@ -11,22 +11,22 @@ export const Menu = ({ currentTab, setCurrentTab }: Props) => {
     <nav className='py-4 max-md:mx-4  max-md:border-b-2 max-md:border-secondary'>
       <ul className='flex gap-x-4 md:block'>
         <MenuItem
-          isActive={currentTab === 'behavior'}
-          onClick={() => setCurrentTab('behavior')}
+          isActive={currentTab === SettingsTab.Behavior}
+          onClick={() => setCurrentTab(SettingsTab.Behavior)}
         >
           Behavior
         </MenuItem>
 
         <MenuItem
-          isActive={currentTab === 'privacy'}
-          onClick={() => setCurrentTab('privacy')}
+          isActive={currentTab === SettingsTab.Privacy}
+          onClick={() => setCurrentTab(SettingsTab.Privacy)}
         >
           Privacy
         </MenuItem>
 
         <MenuItem
-          isActive={currentTab === 'collab'}
-          onClick={() => setCurrentTab('collab')}
+          isActive={currentTab === SettingsTab.Collab}
+          onClick={() => setCurrentTab(SettingsTab.Collab)}
         >
           Collab
         </MenuItem>

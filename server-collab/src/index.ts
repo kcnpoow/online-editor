@@ -1,7 +1,8 @@
 import { Server } from 'socket.io';
-import * as am from '@automerge/automerge';
+import * as Y from 'yjs';
 
-import { AutomergeDoc, EditorField, Room } from './types/collab';
+import { getRandomColor } from './lib/getRandomColor';
+import { Cursor, Room } from './types/сollab';
 
 const io = new Server({
   cors: {
@@ -12,32 +13,123 @@ const io = new Server({
 const rooms: Record<string, Room> = {};
 
 io.on('connection', (socket) => {
-  socket.on('create', (roomId: string, initialDoc: AutomergeDoc) => {
-    if (!rooms[roomId]) {
-      rooms[roomId] = {
-        users: [],
-        cursors: [],
-        doc: am.from(initialDoc),
-      };
+  let currentRoom = '';
+  let currentUser = '';
 
-      socket.join(roomId);
+  socket.on(
+    'create-room',
+    (roomId: string, html: string, css: string, js: string) => {
+      currentUser = socket.id;
+      currentRoom = roomId;
+
+      if (!rooms[currentRoom]) {
+        const doc = new Y.Doc();
+
+        const yHtml = doc.getText('html');
+        const yCss = doc.getText('css');
+        const yJs = doc.getText('js');
+
+        yHtml.insert(0, html);
+        yCss.insert(0, css);
+        yJs.insert(0, js);
+
+        rooms[roomId] = {
+          creator: currentUser,
+          connectedUsers: [currentUser],
+          cursors: {},
+          doc,
+          colors: { [currentUser]: getRandomColor() },
+        };
+      }
+
+      socket.join(currentRoom);
+
+      io.to(currentRoom).emit('create-room', currentRoom);
+
+      console.log(`${currentUser} created room: ${currentRoom}`);
     }
-  });
+  );
 
-  socket.on('join', (roomId: string) => {
-    console.log(roomId);
-  });
-
-  socket.on('update', (roomId: string, changes) => {
+  socket.on('join-room', (roomId: string) => {
     const room = rooms[roomId];
 
-    if (room) {
-      const [newDoc] = am.applyChanges(room.doc, changes);
+    if (!room) return;
 
-      room.doc = newDoc;
+    currentUser = socket.id;
+    currentRoom = roomId;
 
-      io.to(roomId).emit('update', newDoc);
+    socket.join(currentRoom);
+
+    room.connectedUsers.push(currentUser);
+    room.colors[currentUser] = getRandomColor();
+
+    const update = Y.encodeStateAsUpdate(room.doc);
+    socket.emit('join-room', roomId, update);
+
+    console.log(`${currentUser} joined room: ${currentRoom}`);
+  });
+
+  socket.on('leave-room', () => {
+    console.log(`${currentUser} left room: ${currentRoom}`);
+
+    socket.leave(currentRoom);
+
+    currentRoom = '';
+    currentUser = '';
+  });
+
+  socket.on('update', (update: Uint8Array) => {
+    const room = rooms[currentRoom];
+
+    if (!room) return;
+
+    Y.applyUpdate(room.doc, update);
+
+    io.to(currentRoom).emit('update', update);
+  });
+
+  socket.on('cursor-move', (cursor: Cursor) => {
+    const room = rooms[currentRoom];
+
+    if (!room) return;
+
+    if (cursor.selection) {
+      room.cursors[cursor.user] = {
+        ...cursor,
+        color: room.colors[cursor.user],
+      };
+    } else {
+      delete room.cursors[cursor.user];
     }
+
+    socket.to(currentRoom).emit('cursor-move', Object.values(room.cursors));
+  });
+
+  socket.on('disconnect', () => {
+    const room = rooms[currentRoom];
+
+    if (room) {
+      console.log(`${currentUser} disconnected from room: ${currentRoom}`);
+
+      room.connectedUsers = room.connectedUsers.filter(
+        (id) => id !== currentUser
+      );
+
+      delete room.colors[currentUser];
+      delete room.cursors[currentUser];
+
+      io.to(currentRoom).emit('cursor-move', Object.values(room.cursors));
+
+      if (room.connectedUsers.length === 0) {
+        delete rooms[currentRoom];
+        console.log(`Room ${currentRoom} deleted as it became empty`);
+      }
+    }
+
+    socket.leave(currentRoom);
+
+    currentRoom = '';
+    currentUser = '';
   });
 
   console.log(`User connected: ${socket.id}`);
@@ -45,4 +137,4 @@ io.on('connection', (socket) => {
 
 const PORT = 2222;
 io.listen(PORT);
-console.log(`Socket.IO server running on port ${PORT}`);
+console.log(`Server running on port ${PORT}`);

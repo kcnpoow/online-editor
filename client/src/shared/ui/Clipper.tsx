@@ -1,11 +1,13 @@
 import { useRef, useState } from 'react';
 import { IoCopy, IoCheckmark } from 'react-icons/io5';
+import cn from 'classnames';
 
 type Props = {
   children: string;
+  className?: string;
 };
 
-export const Clipper = ({ children }: Props) => {
+export const Clipper = ({ children, className }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isCopied, setIsCopied] = useState(false);
 
@@ -21,7 +23,7 @@ export const Clipper = ({ children }: Props) => {
   };
 
   return (
-    <div className='relative'>
+    <div className={cn('relative', className)}>
       <input
         ref={inputRef}
         className='w-full p-2 pr-8 text-black bg-white rounded-md'

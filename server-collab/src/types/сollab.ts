@@ -1,10 +1,5 @@
 import { SelectionRange } from '@uiw/react-codemirror';
-
-export enum SettingsTab {
-  Behavior,
-  Privacy,
-  Collab,
-}
+import * as Y from 'yjs';
 
 export type EditorField = 'html' | 'css' | 'js';
 
@@ -13,4 +8,12 @@ export type Cursor = {
   field: EditorField;
   selection?: SelectionRange;
   color?: string;
+};
+
+export type Room = {
+  creator: string;
+  connectedUsers: string[];
+  cursors: Record<string, Cursor>;
+  doc: Y.Doc;
+  colors: Record<string, string>;
 };

@@ -9,8 +9,8 @@ type Props = InputHTMLAttributes<HTMLInputElement> & {
 
 export const Switch = ({
   checked = false,
-  onChange,
   className,
+  onChange,
   ...props
 }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);

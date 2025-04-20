@@ -2,9 +2,9 @@ import { ReactNode } from 'react';
 import cn from 'classnames';
 
 type Props = {
-  onClick: () => void;
-  children: ReactNode;
-  isActive: boolean;
+    children: ReactNode;
+    isActive: boolean;
+    onClick: () => void;
 };
 
 export const Tab = ({ onClick, children, isActive }: Props) => {

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
 import { Menu } from './Menu';
-import { Behavior, Privacy, Collab } from './Tabs';
+import { Behavior, Collab } from './Tabs';
 import { SettingsTab } from '@pages/edit/model/types';
-import { Button } from '@shared/ui/Button';
 import { Modal } from '@shared/ui/Modal';
+import { Button } from '@shared/ui/Button';
 
 type Props = {
   isSettingsOpen: boolean;
@@ -12,25 +12,26 @@ type Props = {
 };
 
 export const Settings = ({ isSettingsOpen, onSettingsClose }: Props) => {
-  const [currentTab, setCurrentTab] = useState<SettingsTab>('behavior');
+  const [currentTab, setCurrentTab] = useState<SettingsTab>(
+    SettingsTab.Behavior
+  );
 
   const renderCurrentTab = () => {
-    switch (currentTab) {
-      case 'behavior':
-        return <Behavior />;
-      case 'privacy':
-        return <Privacy />;
-      case 'collab':
-        return <Collab />;
+    if (currentTab === SettingsTab.Behavior) {
+      return <Behavior />;
+    }
+
+    if (currentTab === SettingsTab.Privacy) {
+      return null;
+    }
+
+    if (currentTab === SettingsTab.Collab) {
+      return <Collab />;
     }
   };
 
   return (
-    <Modal
-      className='text-md'
-      isOpen={isSettingsOpen}
-      onClose={onSettingsClose}
-    >
+    <Modal open={isSettingsOpen} onClose={onSettingsClose}>
       <Modal.Header title='Draft Settings' />
 
       <Modal.Body className='md:grid md:grid-cols-[200px_1fr]'>

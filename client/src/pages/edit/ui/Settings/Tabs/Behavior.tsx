@@ -1,29 +1,31 @@
 import { useSettings } from '@pages/edit/model/SettingsContext';
-import { SettingsRow } from './SettingsRow';
+import { SettingsArticle } from './SettingsArticle';
 import { Switch } from '@shared/ui/Switch';
 
 export const Behavior = () => {
-  const { autoUpdate, setAutoUpdate } = useSettings();
+  const { settingsValues, setSettingsValue } = useSettings();
 
   return (
     <section>
-      <SettingsRow
+      <SettingsArticle
         title='Auto-Updating Preview'
         hint='If enabled, the preview panel updates automatically as you code. If
         disabled, use the "Run" button to update.'
       >
         <Switch
-          checked={autoUpdate}
-          onChange={() => setAutoUpdate(!autoUpdate)}
+          checked={settingsValues.autoUpdate}
+          onChange={() =>
+            setSettingsValue('autoUpdate', !settingsValues.autoUpdate)
+          }
         />
-      </SettingsRow>
+      </SettingsArticle>
 
-      <SettingsRow
+      <SettingsArticle
         title='Auto Save'
         hint='If enabled, your changes will be automatically saved as you work. If disabled, you will need to manually save your progress.'
       >
         <Switch onChange={() => null} />
-      </SettingsRow>
+      </SettingsArticle>
     </section>
   );
 };

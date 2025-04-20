@@ -1,31 +1,25 @@
 import { useMemo, useState } from 'react';
-import { PanelGroup, Panel } from 'react-resizable-panels';
-import { html as htmlExt } from '@codemirror/lang-html';
-import { css as cssExt } from '@codemirror/lang-css';
-import { javascript as jsExt } from '@codemirror/lang-javascript';
+import { Panel, PanelGroup } from 'react-resizable-panels';
+import { html } from '@codemirror/lang-html';
+import { css } from '@codemirror/lang-css';
+import { javascript } from '@codemirror/lang-javascript';
 import cn from 'classnames';
+
 import { Tab } from './Tab';
 import { CustomPanelResizeHandle } from './CustomPanelResizeHandle';
-import { CodeEditor } from './CodeEditor';
-import { useCollab } from '@pages/edit/model/CollabContext';
-import { EditorField } from '@pages/edit/model/types';
+import { TextEditor } from './TextEditor';
 import { useEditor } from '@pages/edit/model/EditorContext';
+import { EditorField } from '@pages/edit/model/types';
 
 export const Editor = () => {
-  const { html, css, js, setHtml, setCss, setJs } = useEditor();
-  const { setCursors } = useCollab();
-
-  // Mobile version states
   const [isResultActive, setIsResultActive] = useState(true);
   const [currentEditor, setCurrentEditor] = useState<EditorField>('html');
 
-  const htmlLang = useMemo(() => htmlExt(), []);
-  const cssLang = useMemo(() => cssExt(), []);
-  const jsLang = useMemo(() => jsExt(), []);
+  const { editorValues, setEditorValue } = useEditor();
 
-  const handlePanelResize = () => {
-    setCursors([]); // reset cursors on resize
-  };
+  const htmlLang = useMemo(() => html(), []);
+  const cssLang = useMemo(() => css(), []);
+  const jsLang = useMemo(() => javascript(), []);
 
   return (
     <PanelGroup direction='vertical'>
@@ -62,13 +56,12 @@ export const Editor = () => {
           <Panel
             className={cn({ 'max-md:hidden': currentEditor !== 'html' })}
             minSize={10}
-            onResize={handlePanelResize}
           >
-            <CodeEditor
+            <TextEditor
               field='html'
+              value={editorValues.html}
               language={htmlLang}
-              value={html}
-              onChange={(text) => setHtml(text)}
+              onChange={(text) => setEditorValue('html', text)}
             />
           </Panel>
 
@@ -77,13 +70,12 @@ export const Editor = () => {
           <Panel
             className={cn({ 'max-md:hidden': currentEditor !== 'css' })}
             minSize={10}
-            onResize={handlePanelResize}
           >
-            <CodeEditor
+            <TextEditor
               field='css'
+              value={editorValues.css}
               language={cssLang}
-              value={css}
-              onChange={(text) => setCss(text)}
+              onChange={(text) => setEditorValue('css', text)}
             />
           </Panel>
 
@@ -92,13 +84,12 @@ export const Editor = () => {
           <Panel
             className={cn({ 'max-md:hidden': currentEditor !== 'js' })}
             minSize={10}
-            onResize={handlePanelResize}
           >
-            <CodeEditor
+            <TextEditor
               field='js'
+              value={editorValues.js}
               language={jsLang}
-              value={js}
-              onChange={(text) => setJs(text)}
+              onChange={(text) => setEditorValue('js', text)}
             />
           </Panel>
         </PanelGroup>
@@ -106,16 +97,13 @@ export const Editor = () => {
 
       <CustomPanelResizeHandle direction='horizontal' />
 
-      <Panel
-        className={cn('bg-white', { 'max-md:hidden': !isResultActive })}
-        onResize={handlePanelResize}
-      >
+      <Panel className={cn('bg-white', { 'max-md:hidden': !isResultActive })}>
         <iframe
           width='100%'
           height='100%'
           sandbox='allow-scripts'
           title='output'
-          srcDoc={''}
+          srcDoc={editorValues.output}
         />
       </Panel>
     </PanelGroup>

@@ -6,7 +6,7 @@ type Props = {
   children?: ReactNode;
 };
 
-export const SettingsRow = ({ title, hint, children }: Props) => {
+export const SettingsArticle = ({ title, hint, children }: Props) => {
   return (
     <article className='p-4 bg-linear-to-r from-[#26282F] to-[#131417] border-l-3 border-[#454856] not-last:mb-6'>
       <h3 className='mb-1'>{title}</h3>

@@ -1,47 +1,40 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  Dispatch,
-  SetStateAction,
-} from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
-type SettingsContextValue = {
-  privateMode: boolean;
-  setPrivateMode: Dispatch<SetStateAction<boolean>>;
-
-  collabMode: boolean;
-  setCollabMode: Dispatch<SetStateAction<boolean>>;
-
+type SettingsState = {
+  draftName: string;
   autoUpdate: boolean;
-  setAutoUpdate: Dispatch<SetStateAction<boolean>>;
-
-  autoSave: boolean;
-  setAutoSave: Dispatch<SetStateAction<boolean>>;
+  collabMode: boolean;
 };
 
-const SettingsContext = createContext<SettingsContextValue>(
-  {} as SettingsContextValue
-);
+type SettingsContextValue = {
+  settingsValues: SettingsState;
+  setSettingsValue: <K extends keyof SettingsState>(
+    field: K,
+    value: SettingsState[K]
+  ) => void;
+};
+
+const SettingsContext = createContext<SettingsContextValue | null>(null);
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-  const [privateMode, setPrivateMode] = useState(false);
-  const [collabMode, setCollabMode] = useState(false);
-  const [autoUpdate, setAutoUpdate] = useState(false);
-  const [autoSave, setAutoSave] = useState(false);
+  const [settingsValues, setSettingsValues] = useState<SettingsState>({
+    draftName: 'Untitled',
+    autoUpdate: false,
+    collabMode: false,
+  });
+
+  const setSettingsValue = <K extends keyof SettingsState>(
+    field: K,
+    value: SettingsState[K]
+  ) => {
+    setSettingsValues((prev) => ({ ...prev, [field]: value }));
+  };
 
   return (
     <SettingsContext.Provider
       value={{
-        privateMode,
-        setPrivateMode,
-        collabMode,
-        setCollabMode,
-        autoUpdate,
-        setAutoUpdate,
-        autoSave,
-        setAutoSave,
+        settingsValues,
+        setSettingsValue,
       }}
     >
       {children}
@@ -49,4 +42,12 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useSettings = () => useContext(SettingsContext);
+export const useSettings = () => {
+  const context = useContext(SettingsContext);
+
+  if (!context) {
+    throw new Error('useSettings must be used within an SettingsProvider');
+  }
+
+  return context;
+};

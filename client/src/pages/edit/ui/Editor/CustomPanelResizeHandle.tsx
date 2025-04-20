@@ -1,11 +1,14 @@
-import { PanelResizeHandle } from 'react-resizable-panels';
+import {
+  PanelResizeHandle,
+  PanelResizeHandleProps,
+} from 'react-resizable-panels';
 import cn from 'classnames';
 
 type Props = {
   direction: 'vertical' | 'horizontal';
-};
+} & PanelResizeHandleProps;
 
-export const CustomPanelResizeHandle = ({ direction }: Props) => {
+export const CustomPanelResizeHandle = ({ direction, ...props }: Props) => {
   return (
     <PanelResizeHandle
       className={cn(
@@ -15,6 +18,7 @@ export const CustomPanelResizeHandle = ({ direction }: Props) => {
           ['h-4 border-y-1']: direction === 'horizontal',
         }
       )}
+      {...props}
     />
   );
 };

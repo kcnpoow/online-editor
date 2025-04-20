@@ -1,96 +1,80 @@
-import { useEffect, useState, memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
-import * as am from '@automerge/automerge';
 
 import { Header } from './Header';
-import { Settings } from './Settings';
 import { Editor } from './Editor';
+import { Settings } from './Settings';
 import { SettingsProvider, useSettings } from '../model/SettingsContext';
+import { CollabProvider } from '../model/CollabContext';
 import { EditorProvider, useEditor } from '../model/EditorContext';
-import { CollabProvider, useCollab } from '../model/CollabContext';
-import { collabService } from '../api/CollabService';
+import { useCollabSync } from '../lib/useCollabSync';
+import { generateOutput } from '../lib/generateOutput';
+import { socket } from '@shared/config/socket';
 import { useDebounce } from '@shared/hooks/useDebounce';
 
 const Edit = memo(() => {
-  const [searchParams] = useSearchParams();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const { html, css, js } = useEditor();
-  const { setRoomId, docRef, roomId } = useCollab();
-  const { autoUpdate, setCollabMode, collabMode } = useSettings();
+  const [searchParams] = useSearchParams();
 
-  const handleExecute = () => {};
+  const { settingsValues } = useSettings();
+  const { editorValues, setEditorValue } = useEditor();
 
-  const handleExecuteDebounced = useDebounce(handleExecute, 1000);
+  useCollabSync();
 
-  useEffect(() => {
-    collabService.onUpdate((doc) => {
-      console.log(doc);
-    });
-  }, []);
-
-  // If collab is enabled send changes to server
-  useEffect(() => {
-    if (!collabMode || !roomId || !docRef.current) {
-      return;
-    }
-
-    const newDoc = am.change(docRef.current!, (draft) => {
-      draft.html = html;
-      draft.css = css;
-      draft.js = js;
-    });
-
-    const changes = am.getChanges(docRef.current, newDoc);
-    collabService.update(roomId, changes);
-
-    docRef.current = newDoc;
-  }, [html, css, js]);
-
-  // Join room via roomId from link
   useEffect(() => {
     const roomId = searchParams.get('roomId');
 
     if (roomId) {
-      collabService.join(roomId);
-
-      setCollabMode(true);
-      setRoomId(roomId);
+      socket.emit('join-room', roomId);
     }
-  }, [searchParams, setCollabMode, setRoomId]);
+  }, [socket]);
 
-  useEffect(() => {
-    if (autoUpdate) {
-      handleExecuteDebounced();
-    }
-  }, [autoUpdate]);
+  const handleExecute = () => {
+    const output = generateOutput(
+      editorValues.html,
+      editorValues.css,
+      editorValues.js
+    );
+
+    setEditorValue('output', output);
+  };
+
+  const handleExecuteDebounced = useDebounce(() => {
+    if (settingsValues.autoUpdate) handleExecute();
+  }, 1000);
+
+  useEffect(handleExecuteDebounced, [
+    settingsValues.autoUpdate,
+    editorValues.html,
+    editorValues.css,
+    editorValues.js,
+  ]);
 
   return (
-    <div className='relative overflow-hidden flex flex-col h-screen text-white bg-black'>
+    <div className='relative overflow-x-hidden flex flex-col h-screen text-white bg-black'>
       <Header
-        onSettingsOpen={() => setIsSettingsOpen(true)}
         onExecute={handleExecute}
+        onSettingsOpen={() => setIsSettingsOpen(true)}
       />
+
+      <Editor />
 
       <Settings
         isSettingsOpen={isSettingsOpen}
         onSettingsClose={() => setIsSettingsOpen(false)}
       />
-
-      <Editor />
     </div>
   );
 });
 
-const EditWithProviders = () => {
-  return (
-    <SettingsProvider>
+const EditWithProviders = () => (
+  <SettingsProvider>
+    <CollabProvider>
       <EditorProvider>
-        <CollabProvider>
-          <Edit />
-        </CollabProvider>
+        <Edit />
       </EditorProvider>
-    </SettingsProvider>
-  );
-};
+    </CollabProvider>
+  </SettingsProvider>
+);
 
 export { EditWithProviders as Edit };

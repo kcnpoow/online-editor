@@ -6,17 +6,17 @@ import { ModalBody } from './Body';
 import { ModalFooter } from './Footer';
 
 type Props = {
-  isOpen: boolean;
-  onClose: () => void;
-  children: ReactNode;
   className?: string;
+  open: boolean;
+  children?: ReactNode;
+  onClose: () => void;
 };
 
-const Modal = ({ isOpen, onClose, children, className }: Props) => {
-  const $backdrop = useRef(null);
+const Modal = ({ open, onClose, children, className }: Props) => {
+  const backdropRef = useRef(null);
 
   const handleBackdropClick = (e: MouseEvent<HTMLDivElement>) => {
-    if (e.target === $backdrop.current) {
+    if (e.target === backdropRef.current) {
       onClose();
     }
   };
@@ -36,11 +36,13 @@ const Modal = ({ isOpen, onClose, children, className }: Props) => {
   }, []);
   return (
     <div
-      ref={$backdrop}
+      ref={backdropRef}
       className={cn(
         'fixed inset-0 z-100 flex items-center justify-center px-4 py-8 bg-black/75',
         className,
-        isOpen ? '' : 'hidden'
+        {
+          hidden: !open,
+        }
       )}
       tabIndex={1}
       role='dialog'

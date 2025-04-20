@@ -1,39 +1,43 @@
-import { createContext, useContext, useRef, useState } from 'react';
-import * as am from '@automerge/automerge';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
-import { AutomergeDoc, Cursor } from './types';
+import { Cursor } from './types';
 
-export type CollabContextValue = {
-  roomId: string;
-  cursors: Cursor[];
+type CollabState = {
+  roomId: string | null;
   connectedUsers: string[];
-  setRoomId: (id: string) => void;
-  setCursors: (cursor: Cursor[]) => void;
-  setConnectedUsers: (users: string[]) => void;
-  docRef: React.MutableRefObject<am.Doc<AutomergeDoc> | null>;
+  isCreator: boolean;
+  userCursor: Cursor | null;
+  cursors: Cursor[];
+};
+
+type CollabContextValue = {
+  collabValues: CollabState;
+  setCollabValue: <K extends keyof CollabState>(
+    field: K,
+    value: CollabState[K]
+  ) => void;
 };
 
 const CollabContext = createContext<CollabContextValue | null>(null);
 
-export const CollabProvider = ({ children }: { children: React.ReactNode }) => {
-  const [roomId, setRoomId] = useState('');
-  const [cursors, setCursors] = useState<Cursor[]>([]);
-  const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
+export const CollabProvider = ({ children }: { children: ReactNode }) => {
+  const [collabValues, setCollabValues] = useState<CollabState>({
+    roomId: null,
+    connectedUsers: [],
+    isCreator: false,
+    userCursor: null,
+    cursors: [],
+  });
 
-  const docRef = useRef<am.Doc<AutomergeDoc> | null>(null);
+  const setCollabValue = <K extends keyof CollabState>(
+    field: K,
+    value: CollabState[K]
+  ) => {
+    setCollabValues((prev) => ({ ...prev, [field]: value }));
+  };
 
   return (
-    <CollabContext.Provider
-      value={{
-        roomId,
-        cursors,
-        connectedUsers,
-        setRoomId,
-        setCursors,
-        setConnectedUsers,
-        docRef,
-      }}
-    >
+    <CollabContext.Provider value={{ collabValues, setCollabValue }}>
       {children}
     </CollabContext.Provider>
   );
@@ -42,8 +46,9 @@ export const CollabProvider = ({ children }: { children: React.ReactNode }) => {
 export const useCollab = () => {
   const context = useContext(CollabContext);
 
-  if (!context)
-    throw new Error('useCollab must be used within a CollabProvider');
+  if (!context) {
+    throw new Error('useCollab must be used within an CollabProvider');
+  }
 
   return context;
 };

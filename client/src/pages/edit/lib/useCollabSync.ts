@@ -8,6 +8,8 @@ import { Cursor } from '../model/types';
 import { useDebounce } from '@shared/hooks/useDebounce';
 import { socket } from '@shared/config/socket';
 
+const DEBOUNCE_TIME = 250;
+
 export const useCollabSync = () => {
   const { editorValues, setEditorValue } = useEditor();
   const { settingsValues, setSettingsValue } = useSettings();
@@ -111,13 +113,13 @@ export const useCollabSync = () => {
       const update = Y.encodeStateAsUpdate(yDocRef.current);
       socket.emit('update', update);
     }
-  }, 500);
+  }, DEBOUNCE_TIME);
 
   const handleCursorMoveDebounced = useDebounce(() => {
     if (!settingsValues.collabMode) return;
 
     socket.emit('cursor-move', collabValues.userCursor);
-  }, 500);
+  }, DEBOUNCE_TIME);
 
   useEffect(handleUpdateDebounced, [
     editorValues.html,
@@ -125,4 +127,11 @@ export const useCollabSync = () => {
     editorValues.js,
   ]);
   useEffect(handleCursorMoveDebounced, [collabValues.userCursor]);
+
+  return {
+    yDoc: yDocRef.current,
+    yHtml: yHtmlRef.current,
+    cssHtml: yCssRef.current,
+    js: yJsRef.current,
+  };
 };

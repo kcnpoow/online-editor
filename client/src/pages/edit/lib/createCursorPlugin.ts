@@ -68,10 +68,14 @@ export const createCursorPlugin = (cursors: Cursor[], field: EditorField) =>
           deco: Decoration;
         }[] = [];
 
+        const docLength = view.state.doc.length;
+        const clamp = (pos: number) => Math.max(0, Math.min(pos, docLength));
+
         cursors.forEach((cursor) => {
           if (cursor.field !== field || !cursor.selection) return;
 
-          const { anchor, head } = cursor.selection;
+          const anchor = clamp(cursor.selection.anchor ?? 0);
+          const head = clamp(cursor.selection.head ?? 0);
 
           if (anchor !== head) {
             const from = Math.min(anchor, head);
@@ -100,7 +104,6 @@ export const createCursorPlugin = (cursors: Cursor[], field: EditorField) =>
 
         decorations.sort((a, b) => {
           if (a.from !== b.from) return a.from - b.from;
-
           return a.to - b.to;
         });
 

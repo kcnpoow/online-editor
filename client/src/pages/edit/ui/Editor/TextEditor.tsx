@@ -41,9 +41,14 @@ export const TextEditor = ({ field, value, language, onChange }: Props) => {
     }
   };
 
-  const cursorPlugin = useMemo(() => {
-    return createCursorPlugin(collabValues.cursors, field);
-  }, [collabValues.cursors, field]);
+  const cursorPlugin = useMemo(
+    () =>
+      createCursorPlugin(
+        collabValues.cursors.filter((c) => socket.id !== c.user),
+        field
+      ),
+    [collabValues.cursors]
+  );
 
   const handleCreateEditor = (view: EditorView) => {
     editorRef.current = view;
@@ -60,9 +65,14 @@ export const TextEditor = ({ field, value, language, onChange }: Props) => {
     setIsFocusing(false);
   };
 
+  const extensions = useMemo(
+    () => [language, cursorPlugin],
+    [language, cursorPlugin]
+  );
+
   return (
     <div className='flex flex-col h-full'>
-      <span className='max-w-fit px-3 py-1 font-semibold uppercase bg-[#292C33] max-md:hidden'>
+      <span className='max-w-fit px-3 py-1 font-semibold uppercase bg-[#292C33] max-md:hidden border-t-2 border-[#3d3f47]'>
         {field}
       </span>
 
@@ -70,7 +80,7 @@ export const TextEditor = ({ field, value, language, onChange }: Props) => {
         <ReactCodeMirror
           className='h-full [&_.cm-editor]:h-full [&_.cm-scroller]:pt-4'
           theme='dark'
-          extensions={[language, cursorPlugin]}
+          extensions={extensions}
           value={value}
           onChange={onChange}
           onFocus={() => setIsFocusing(true)}

@@ -47,7 +47,7 @@ export const Signin = () => {
     try {
       const result = await authApi.signin(formData.username, formData.password);
 
-      setUser(result);
+      console.log(result);
     } catch (error) {
       setErrors((prev) => ({
         ...prev,
@@ -91,7 +91,7 @@ export const Signin = () => {
         />
 
         <Link
-          className='block ml-auto mb-6 text-white/75 hover:underline hover:text-white'
+          className='block ml-auto text-white/75 hover:underline hover:text-white'
           to='#'
         >
           Forgot password?

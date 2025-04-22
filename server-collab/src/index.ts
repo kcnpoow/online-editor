@@ -91,7 +91,7 @@ io.on('connection', (socket) => {
   socket.on('cursor-move', (cursor: Cursor) => {
     const room = rooms[currentRoom];
 
-    if (!room) return;
+    if (!room || !cursor) return;
 
     if (cursor.selection) {
       room.cursors[cursor.user] = {
@@ -102,7 +102,7 @@ io.on('connection', (socket) => {
       delete room.cursors[cursor.user];
     }
 
-    socket.to(currentRoom).emit('cursor-move', Object.values(room.cursors));
+    io.to(currentRoom).emit('cursor-move', Object.values(room.cursors));
   });
 
   socket.on('disconnect', () => {

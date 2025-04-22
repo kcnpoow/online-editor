@@ -1,6 +1,7 @@
 import { FaHeart, FaCommentAlt, FaEye } from 'react-icons/fa';
 
 import { Chip } from './Chip';
+
 export const DraftCard = () => {
   return (
     <figure className='relative p-4 pb-2 cursor-pointer'>

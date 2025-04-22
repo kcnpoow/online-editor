@@ -12,6 +12,7 @@ export const MenuItem = ({ onClick, isActive, children }: Props) => {
     <li
       className={cn(
         'p-1 cursor-pointer md:pl-4 md:border-l-2 hover:bg-[#2D3039] transition-colors select-none',
+        
         isActive ? 'bg-[#2D3039] border-success' : 'border-transparent'
       )}
       onClick={onClick}

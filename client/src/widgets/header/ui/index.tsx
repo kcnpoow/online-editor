@@ -13,6 +13,11 @@ type Props = {
 export const Header = ({ isNavbarOpened, toggleNavbar }: Props) => {
   const { user, setUser } = useAuth();
 
+  const handleSignoutClick = () => {
+    setUser(null);
+    localStorage.removeItem('accessToken');
+  };
+
   return (
     <header className='flex items-center gap-x-2 px-4 py-2 bg-black border-b-1 border-[#252830] md:py-4'>
       <NavbarToggler
@@ -27,7 +32,7 @@ export const Header = ({ isNavbarOpened, toggleNavbar }: Props) => {
           <Button
             className='max-md:p-2'
             color='secondary'
-            onClick={() => setUser(null)}
+            onClick={handleSignoutClick}
           >
             Sign Out
           </Button>

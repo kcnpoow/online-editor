@@ -6,7 +6,6 @@ import { FeatureCard } from './FeatureCard.tsx';
 import { HtmlAnimation, JsAnimation, CssAnimation } from './CodeAnimation.tsx';
 import { ImageListCard } from './ImageListCard.tsx';
 import { ListCard } from './ListCard.tsx';
-import { DraftCard } from '@entities/draft/index.ts';
 import { Button } from '@shared/ui/Button';
 import { useAuth } from '@shared/hooks/useAuth.tsx';
 
@@ -39,7 +38,7 @@ export const Home = () => {
   };
 
   return (
-    <>
+    <div className='py-15'>
       <section className='container relative mb-20'>
         <div className='lg:grid lg:grid-cols-2 lg:gap-8  w-full mx-auto relative'>
           <div className='lg:col-start-2 lg:row-start-1 max-lg:min-h-96 rounded-[10px] relative w-full min-h-[410px]'>
@@ -142,11 +141,11 @@ export const Home = () => {
             </div>
           </div>
 
+          {/* <DraftCard />
           <DraftCard />
           <DraftCard />
           <DraftCard />
-          <DraftCard />
-          <DraftCard />
+          <DraftCard /> */}
         </div>
 
         <div className='flex justify-center'>
@@ -193,6 +192,6 @@ export const Home = () => {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 };

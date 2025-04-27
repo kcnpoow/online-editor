@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { Menu } from './Menu';
-import { Behavior, Collab } from './Tabs';
+import { Behavior, Collab, Privacy } from './Tabs';
 import { SettingsTab } from '@pages/edit/model/types';
 import { Modal } from '@shared/ui/Modal';
 import { Button } from '@shared/ui/Button';
@@ -22,7 +22,7 @@ export const Settings = ({ isSettingsOpen, onSettingsClose }: Props) => {
     }
 
     if (currentTab === SettingsTab.Privacy) {
-      return null;
+      return <Privacy />;
     }
 
     if (currentTab === SettingsTab.Collab) {

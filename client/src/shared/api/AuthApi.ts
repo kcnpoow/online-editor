@@ -10,6 +10,10 @@ class AuthApi {
   public async signup(username: string, email: string, password: string) {
     return api.post('/signup', { username, email, password });
   }
+
+  public async auth() {
+    return await api.get('/auth');
+  }
 }
 
 export const authApi = new AuthApi();

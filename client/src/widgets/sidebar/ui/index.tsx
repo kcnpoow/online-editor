@@ -8,7 +8,7 @@ type Props = {
 
 export const Sidebar = ({ isNavbarOpened }: Props) => {
   return (
-    <aside className='border-r-1 border-[#252830]'>
+    <aside className='md:border-r-1 md:border-[#252830]'>
       <div
         className={cn(
           'absolute top-[53px] z-50 left-4 py-2 bg-secondary transition-all duration-200 ease-out origin-top-left md:hidden',

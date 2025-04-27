@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as Y from 'yjs';
 
 import { useEditor } from '../model/EditorContext';
@@ -7,10 +7,13 @@ import { useSettings } from '../model/SettingsContext';
 import { Cursor } from '../model/types';
 import { useDebounce } from '@shared/hooks/useDebounce';
 import { socket } from '@shared/config/socket';
+import { useSearchParams } from 'react-router';
 
 const DEBOUNCE_TIME = 250;
 
 export const useCollabSync = () => {
+  const [searchParams] = useSearchParams();
+
   const { editorValues, setEditorValue } = useEditor();
   const { settingsValues, setSettingsValue } = useSettings();
   const { collabValues, setCollabValue } = useCollab();
@@ -20,24 +23,39 @@ export const useCollabSync = () => {
   const yCssRef = useRef(yDocRef.current.getText('css'));
   const yJsRef = useRef(yDocRef.current.getText('js'));
 
+  const isApplyingRemoteUpdate = useRef(false);
+  const [isSynced, setIsSynced] = useState(false);
+
+  useEffect(() => {
+    const roomId = searchParams.get('roomId');
+    if (roomId) {
+      socket.emit('join-room', roomId);
+    }
+  }, []);
+
   useEffect(() => {
     const handleCreateRoom = (roomId: string) => {
       setCollabValue('isCreator', true);
       setCollabValue('roomId', roomId);
+      setSettingsValue('collabMode', true);
+      setIsSynced(true);
     };
 
     const handleJoinRoom = (roomId: string, buffer: ArrayBuffer) => {
       setSettingsValue('collabMode', true);
       setCollabValue('roomId', roomId);
 
-      const update = new Uint8Array(buffer);
-      Y.applyUpdate(yDocRef.current, update);
+      isApplyingRemoteUpdate.current = true;
+      Y.applyUpdate(yDocRef.current, new Uint8Array(buffer));
+      isApplyingRemoteUpdate.current = false;
+
+      setIsSynced(true);
     };
 
-    const handleUpdate = (buffer: ArrayBuffer) => {
-      const update = new Uint8Array(buffer);
-
-      Y.applyUpdate(yDocRef.current, update);
+    const handleUpdate = (update: ArrayBuffer) => {
+      isApplyingRemoteUpdate.current = true;
+      Y.applyUpdate(yDocRef.current, new Uint8Array(update));
+      isApplyingRemoteUpdate.current = false;
     };
 
     const handleCursorMove = (cursors: Cursor[]) => {
@@ -58,13 +76,21 @@ export const useCollabSync = () => {
   }, []);
 
   useEffect(() => {
+    if (!isSynced) return;
+
     const yhtml = yHtmlRef.current;
     const ycss = yCssRef.current;
     const yjs = yJsRef.current;
 
-    const htmlObserver = () => setEditorValue('html', yhtml.toString());
-    const cssObserver = () => setEditorValue('css', ycss.toString());
-    const jsObserver = () => setEditorValue('js', yjs.toString());
+    const htmlObserver = () => {
+      setEditorValue('html', yhtml.toString());
+    };
+    const cssObserver = () => {
+      setEditorValue('css', ycss.toString());
+    };
+    const jsObserver = () => {
+      setEditorValue('js', yjs.toString());
+    };
 
     yhtml.observe(htmlObserver);
     ycss.observe(cssObserver);
@@ -75,10 +101,10 @@ export const useCollabSync = () => {
       ycss.unobserve(cssObserver);
       yjs.unobserve(jsObserver);
     };
-  }, [setEditorValue]);
+  }, [isSynced]);
 
   const handleUpdateDebounced = useDebounce(() => {
-    if (!settingsValues.collabMode) return;
+    if (!settingsValues.collabMode || isApplyingRemoteUpdate.current) return;
 
     const { html, css, js } = editorValues;
 
@@ -91,21 +117,18 @@ export const useCollabSync = () => {
     if (html !== yhtml.toString()) {
       yhtml.delete(0, yhtml.length);
       yhtml.insert(0, html);
-
       hasChanged = true;
     }
 
     if (css !== ycss.toString()) {
       ycss.delete(0, ycss.length);
       ycss.insert(0, css);
-
       hasChanged = true;
     }
 
     if (js !== yjs.toString()) {
       yjs.delete(0, yjs.length);
       yjs.insert(0, js);
-
       hasChanged = true;
     }
 
@@ -117,7 +140,6 @@ export const useCollabSync = () => {
 
   const handleCursorMoveDebounced = useDebounce(() => {
     if (!settingsValues.collabMode) return;
-
     socket.emit('cursor-move', collabValues.userCursor);
   }, DEBOUNCE_TIME);
 
@@ -126,6 +148,7 @@ export const useCollabSync = () => {
     editorValues.css,
     editorValues.js,
   ]);
+
   useEffect(handleCursorMoveDebounced, [collabValues.userCursor]);
 
   return {

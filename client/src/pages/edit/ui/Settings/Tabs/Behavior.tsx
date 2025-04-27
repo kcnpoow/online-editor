@@ -24,7 +24,12 @@ export const Behavior = () => {
         title='Auto Save'
         hint='If enabled, your changes will be automatically saved as you work. If disabled, you will need to manually save your progress.'
       >
-        <Switch onChange={() => null} />
+        <Switch
+          checked={settingsValues.autoSave}
+          onChange={() =>
+            setSettingsValue('autoSave', !settingsValues.autoSave)
+          }
+        />
       </SettingsArticle>
     </section>
   );

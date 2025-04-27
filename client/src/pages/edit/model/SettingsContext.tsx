@@ -1,9 +1,10 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
 type SettingsState = {
-  draftName: string;
   autoUpdate: boolean;
+  autoSave: boolean;
   collabMode: boolean;
+  privateMode: boolean;
 };
 
 type SettingsContextValue = {
@@ -18,9 +19,10 @@ const SettingsContext = createContext<SettingsContextValue | null>(null);
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   const [settingsValues, setSettingsValues] = useState<SettingsState>({
-    draftName: 'Untitled',
     autoUpdate: false,
+    autoSave: false,
     collabMode: false,
+    privateMode: false,
   });
 
   const setSettingsValue = <K extends keyof SettingsState>(

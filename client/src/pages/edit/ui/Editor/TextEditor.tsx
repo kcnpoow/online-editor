@@ -26,6 +26,17 @@ export const TextEditor = ({ field, value, language, onChange }: Props) => {
   const editorRef = useRef<EditorView | null>(null);
   const lastSelectionRef = useRef<SelectionRange | null>(null);
 
+  const extensions = useMemo(
+    () => [
+      language,
+      createCursorPlugin(
+        collabValues.cursors.filter((c) => socket.id !== c.user),
+        field
+      ),
+    ],
+    [language, collabValues.cursors]
+  );
+
   const handleStatistics = (data: Statistics) => {
     const newSelection = data.selectionAsSingle;
 
@@ -41,15 +52,6 @@ export const TextEditor = ({ field, value, language, onChange }: Props) => {
     }
   };
 
-  const cursorPlugin = useMemo(
-    () =>
-      createCursorPlugin(
-        collabValues.cursors.filter((c) => socket.id !== c.user),
-        field
-      ),
-    [collabValues.cursors]
-  );
-
   const handleCreateEditor = (view: EditorView) => {
     editorRef.current = view;
   };
@@ -64,11 +66,6 @@ export const TextEditor = ({ field, value, language, onChange }: Props) => {
 
     setIsFocusing(false);
   };
-
-  const extensions = useMemo(
-    () => [language, cursorPlugin],
-    [language, cursorPlugin]
-  );
 
   return (
     <div className='flex flex-col h-full'>

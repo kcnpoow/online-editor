@@ -1,31 +1,47 @@
-import { useState } from 'react';
-import cn from 'classnames';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router';
 
-import { DisplayMode, Mode } from '@features/display-mode';
-import { DraftCard, DraftRow } from '@entities/draft';
-import { data } from '../test/data';
+import { DraftList, SortValues } from '@widgets/draft-list';
+import { Mode } from '@features/display-mode';
+import { Draft, draftApi } from '@entities/draft';
 
 export const Explore = () => {
+  const [drafts, setDrafts] = useState<Draft[]>([]);
   const [mode, setMode] = useState<Mode>('card');
 
-  return (
-    <div className='container'>
-      <DisplayMode
-        className='mb-4'
-        mode={mode}
-        onCardChange={() => setMode('card')}
-        onRowChange={() => setMode('row')}
-      />
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('search');
 
-      <div
-        className={cn('grid', {
-          'grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6':
-            mode === 'card',
-          'gap-y-6': mode === 'row',
-        })}
-      >
-        {data.map((draft) => (mode === 'card' ? <DraftCard /> : <DraftRow />))}
-      </div>
+  useEffect(() => {
+    const loadDrafts = async () => {
+      let result: Draft[];
+      if (query) {
+        result = await draftApi.searchDrafts(query);
+      } else {
+        result = await draftApi.getAllDrafts();
+      }
+
+      setDrafts(result);
+    };
+
+    loadDrafts();
+  }, [searchParams]);
+
+  return (
+    <div className='container py-15'>
+      {query && (
+        <p className='mb-6 text-xl font-bold'>
+          Search results for <span className='underline'>{query}</span>:
+        </p>
+      )}
+
+      <DraftList
+        drafts={drafts}
+        mode={mode}
+        onModeChange={(mode) => setMode(mode)}
+        sortValue={SortValues.CommentsCount}
+        onSortChange={() => {}}
+      />
     </div>
   );
 };

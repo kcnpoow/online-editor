@@ -28,19 +28,23 @@ export const Button = <T extends ElementType = 'button'>({
   variant = 'filled',
   className,
   as,
-  adaptive,
+  disabled,
   ...props
 }: Props<T>) => {
   const Component = as || 'button';
 
+  const disabledClasses = 'opacity-50 cursor-not-allowed pointer-events-none';
+
   return (
     <Component
       className={cn(
-        'inline-block text-nowrap active:translate-y-[1px]',
+        'inline-block active:translate-y-[1px]',
         colors[color],
         variants[variant],
+        disabled && disabledClasses,
         className
       )}
+      disabled={disabled}
       {...props}
     />
   );

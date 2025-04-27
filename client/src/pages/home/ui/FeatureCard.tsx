@@ -16,20 +16,19 @@ export const FeatureCard = ({
   title,
   description,
   linkText,
-  linkTo
+  linkTo,
 }: Props) => {
   return (
     <div className='bg-[#2c303a] p-6 pb-8 rounded-lg relative '>
-      <div className='mb-4 -mt-10 bg-[#131417] w-[75px] h-[75px]'>
-        <img
-          className=' mb-0 mx-2.5 max-w-full h-auto text-center'
-          src={icon}
-        />
+      <div className='p-3 mb-4 -mt-10 bg-[#131417] w-[75px] h-[75px] rounded-b-lg'>
+        <img className='w-full h-full text-center' src={icon} />
       </div>
       <h2 className='text-3xl mb-2.5 font-normal'>{title}</h2>
       <p className='text-[#c7c9d3] mb-4'>{description}</p>
 
-      <Button color='secondary' as={Link} to={linkTo}>{linkText}</Button>
+      <Button color='secondary' as={Link} to={linkTo}>
+        {linkText}
+      </Button>
     </div>
   );
 };

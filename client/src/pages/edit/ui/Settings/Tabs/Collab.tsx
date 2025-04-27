@@ -1,7 +1,6 @@
 import { SettingsArticle } from './SettingsArticle';
 import { useSettings } from '@pages/edit/model/SettingsContext';
 import { useCollab } from '@pages/edit/model/CollabContext';
-import { generateRoomId } from '@pages/edit/lib/generateRoomId';
 import { Switch } from '@shared/ui/Switch';
 import { Clipper } from '@shared/ui/Clipper';
 import { socket } from '@shared/config/socket';
@@ -16,17 +15,14 @@ export const Collab = () => {
     const newCollabMode = !settingsValues.collabMode;
 
     if (newCollabMode) {
-      const roomId = generateRoomId();
-
       const { html, css, js } = editorValues;
-      socket.emit('create-room', roomId, html, css, js);
+
+      socket.emit('create-room', html, css, js);
     } else {
       socket.emit('leave-room');
-
       setCollabValue('roomId', null);
+      setSettingsValue('collabMode', newCollabMode);
     }
-
-    setSettingsValue('collabMode', newCollabMode);
   };
 
   return (

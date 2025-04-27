@@ -32,7 +32,7 @@ export const NavbarToggler = ({ isNavbarOpened, toggleNavbar }: Props) => {
             '-scale-100': isNavbarOpened,
           }
         )}
-        src='images/arrow.svg'
+        src='/images/arrow.svg'
       />
     </button>
   );

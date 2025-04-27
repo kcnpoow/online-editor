@@ -1,19 +1,20 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useRef } from 'react';
 import { Panel, PanelGroup } from 'react-resizable-panels';
 import { html } from '@codemirror/lang-html';
 import { css } from '@codemirror/lang-css';
 import { javascript } from '@codemirror/lang-javascript';
 import cn from 'classnames';
 
-import { Tab } from './Tab';
 import { CustomPanelResizeHandle } from './CustomPanelResizeHandle';
 import { TextEditor } from './TextEditor';
 import { useEditor } from '@pages/edit/model/EditorContext';
 import { EditorField } from '@pages/edit/model/types';
+import { EditorTab } from '@shared/ui/EditorTab';
 
 export const Editor = () => {
   const [isResultActive, setIsResultActive] = useState(true);
   const [currentEditor, setCurrentEditor] = useState<EditorField>('html');
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
   const { editorValues, setEditorValue } = useEditor();
 
@@ -25,30 +26,30 @@ export const Editor = () => {
     <PanelGroup direction='vertical'>
       {/* Mobile version menu */}
       <ul className='flex gap-x-0.5 px-2 pt-2 md:hidden'>
-        <Tab
+        <EditorTab
           onClick={() => setCurrentEditor('html')}
-          isActive={currentEditor === 'html'}
+          active={currentEditor === 'html'}
         >
           HTML
-        </Tab>
-        <Tab
+        </EditorTab>
+        <EditorTab
           onClick={() => setCurrentEditor('css')}
-          isActive={currentEditor === 'css'}
+          active={currentEditor === 'css'}
         >
           CSS
-        </Tab>
-        <Tab
+        </EditorTab>
+        <EditorTab
           onClick={() => setCurrentEditor('js')}
-          isActive={currentEditor === 'js'}
+          active={currentEditor === 'js'}
         >
           JS
-        </Tab>
-        <Tab
+        </EditorTab>
+        <EditorTab
           onClick={() => setIsResultActive((prevState) => !prevState)}
-          isActive={isResultActive}
+          active={isResultActive}
         >
           Result
-        </Tab>
+        </EditorTab>
       </ul>
 
       <Panel minSize={30}>
@@ -99,6 +100,7 @@ export const Editor = () => {
 
       <Panel className={cn('bg-white', { 'max-md:hidden': !isResultActive })}>
         <iframe
+          ref={iframeRef}
           width='100%'
           height='100%'
           sandbox='allow-scripts'

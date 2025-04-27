@@ -17,23 +17,28 @@ export const Input = ({
   label,
   placeholder,
   error,
+  disabled,
   ...props
 }: Props) => {
   return (
     <div className={cn(containerClassName, { 'pt-6': label })}>
-      <div className='relative  w-full h-full'>
+      <div className='relative w-full h-full'>
         <input
           className={cn(
             className,
-            'peer w-full p-3 text-white placeholder-[#878C9E] bg-[#26282F] rounded-md not-read-only:focus-within:bg-[#454856]',
+            'peer w-full p-3 text-white placeholder-[#878C9E] bg-[#26282F] rounded-md',
             {
               'pl-10': icon,
               'outline-0 ring-2 ring-red-400 focus-within:ring-2': error,
               'not-read-only:focus-within:outline-0': !error,
+              'bg-[#1f2024] text-[#555B6B] placeholder-[#555B6B] cursor-not-allowed':
+                disabled,
+              'not-read-only:focus-within:bg-[#454856]': !disabled,
             }
           )}
           placeholder={label ? ' ' : placeholder}
           id={id}
+          disabled={disabled}
           {...props}
         />
 

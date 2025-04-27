@@ -3,9 +3,9 @@ import { Link } from 'react-router';
 import { FaLock, FaUser } from 'react-icons/fa';
 import { MdMail } from 'react-icons/md';
 
+import { authApi } from '@shared/api/AuthApi';
 import { Input } from '@shared/ui/Input';
 import { Button } from '@shared/ui/Button';
-import { authApi } from '@shared/api/AuthApi';
 
 const initialFormData = {
   username: '',

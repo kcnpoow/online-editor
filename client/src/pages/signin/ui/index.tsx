@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { FaLock, FaUser } from 'react-icons/fa';
 
+import { authApi } from '@shared/api/AuthApi';
 import { Input } from '@shared/ui/Input';
 import { Button } from '@shared/ui/Button';
 import { Alert } from '@shared/ui/Alert';
-import { authApi } from '@shared/api/AuthApi';
 import { useAuth } from '@shared/hooks/useAuth';
 
 const initialFormData = {
@@ -23,6 +23,7 @@ export const Signin = () => {
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState(initialErrors);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { setUser } = useAuth();
 
   const handleChange = (field: string, value: string) => {
@@ -47,7 +48,10 @@ export const Signin = () => {
     try {
       const result = await authApi.signin(formData.username, formData.password);
 
-      console.log(result);
+      const { user, token } = result;
+      localStorage.setItem('accessToken', token);
+
+      setUser(user);
     } catch (error) {
       setErrors((prev) => ({
         ...prev,
@@ -60,10 +64,7 @@ export const Signin = () => {
 
   return (
     <form onSubmit={handleSubmit} className='content-center h-full'>
-      <fieldset
-        className='flex flex-col max-w-105 p-4 mx-auto'
-        disabled={isSubmitting}
-      >
+      <fieldset className='flex flex-col max-w-105 p-4 mx-auto'>
         <h1 className='text-white text-3xl text-center font-bold'>Sign In</h1>
 
         <Input
@@ -76,6 +77,7 @@ export const Signin = () => {
           value={formData.username}
           onChange={(e) => handleChange('username', e.target.value)}
           error={errors.username}
+          disabled={isSubmitting}
         />
 
         <Input
@@ -88,6 +90,7 @@ export const Signin = () => {
           value={formData.password}
           onChange={(e) => handleChange('password', e.target.value)}
           error={errors.password}
+          disabled={isSubmitting}
         />
 
         <Link
@@ -108,6 +111,7 @@ export const Signin = () => {
           color='primary'
           variant='filled'
           type='submit'
+          disabled={isSubmitting}
         >
           Login
         </Button>

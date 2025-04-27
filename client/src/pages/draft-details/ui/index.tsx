@@ -1,5 +1,5 @@
-import { Link, useParams, useSearchParams } from 'react-router';
 import { useEffect, useState } from 'react';
+import { Link, useParams, useSearchParams } from 'react-router';
 
 import { CommentInput } from './CommentInput';
 import { DraftEmbed } from '@widgets/draft-embed';
@@ -29,6 +29,7 @@ export const DraftDetails = () => {
     if (!draftId) return;
 
     const result = await draftApi.getDraft(draftId, searchParams.get('key'));
+
     setDraft(result);
   };
 
@@ -51,7 +52,7 @@ export const DraftDetails = () => {
   }, [draft]);
 
   if (!draft) {
-    return;
+    return null;
   }
 
   return (

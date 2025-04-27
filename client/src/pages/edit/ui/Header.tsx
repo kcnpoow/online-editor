@@ -31,18 +31,18 @@ export const Header = ({ onSettingsOpen }: Props) => {
       </div>
 
       {!settingsValues.autoUpdate && (
-        <Button color='primary' onClick={handleExecute}>
+        <Button color='primary' onClick={handleExecute} type='button'>
           Run
         </Button>
       )}
 
       {!settingsValues.autoSave && (
-        <Button color='tertiary' onClick={handleSave}>
+        <Button color='tertiary' onClick={() => handleSave()} type='button'>
           Save
         </Button>
       )}
 
-      <Button color='tertiary' onClick={onSettingsOpen}>
+      <Button color='tertiary' onClick={onSettingsOpen} type='button'>
         Settings
       </Button>
     </header>

@@ -1,5 +1,6 @@
 package com.example.bdcodeeditor.controllers;
 
+import com.example.bdcodeeditor.dto.ProjectResponseDTO;
 import com.example.bdcodeeditor.lib.JwtCore;
 import com.example.bdcodeeditor.lib.Utils;
 import com.example.bdcodeeditor.models.Project;
@@ -8,16 +9,18 @@ import com.example.bdcodeeditor.repositories.ProjectRepository;
 import com.example.bdcodeeditor.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -61,16 +64,79 @@ public class ProjectController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchProjects(@RequestParam String query) {
-        List<Project> results = projectRepository.searchByProjectName(query);
+    public ResponseEntity<?> searchProjects(@RequestParam String query,
+            @RequestParam(required = false, defaultValue = "date") String sortBy,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Project> results = projectRepository.searchByProjectName(query, pageable);
 
-        return ResponseEntity.ok(results);
+        List<Project> sortedContent = new ArrayList<>(results.getContent()); // ВАЖНО! создаём копию для сортировки
+
+        sortedContent.sort((p1, p2) -> {
+            switch (sortBy) {
+                case "commentsCount":
+                    return Integer.compare(p2.getComments().size(), p1.getComments().size());
+                case "likesCount":
+                    return Integer.compare(p2.getLikes().size(), p1.getLikes().size());
+                case "viewsCount":
+                    return Integer.compare(p2.getViews().size(), p1.getViews().size());
+                case "createdDate":
+                default:
+                    return p2.getCreatedAt().compareTo(p1.getCreatedAt());
+            }
+        });
+
+        // Теперь мапим в ProjectResponseDTO
+        List<ProjectResponseDTO> responseContent = sortedContent.stream()
+                .map(project -> new ProjectResponseDTO(
+                        project.getId(),
+                        project.getProjectName(),
+                        project.getScreenshotUrl(),
+                        project.getComments().size(),
+                        project.getLikes().size(),
+                        project.getViews().size(),
+                        project.getUser()))
+                .toList();
+
+        Map<String, Object> response = Map.of(
+                "content", responseContent,
+                "page", results.getNumber(),
+                "size", results.getSize(),
+                "totalElements", results.getTotalElements(),
+                "totalPages", results.getTotalPages(),
+                "last", results.isLast());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<Project>> getAllProjects() {
-        List<Project> projects = projectRepository.findByPrivateFlagFalse();
-        return ResponseEntity.ok(projects);
+    public ResponseEntity<Map<String, Object>> getAllProjects(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Project> projectsPage = projectRepository.findByPrivateFlagFalse(pageable);
+
+        List<ProjectResponseDTO> responseContent = projectsPage.getContent().stream()
+                .map(project -> new ProjectResponseDTO(
+                        project.getId(),
+                        project.getProjectName(),
+                        project.getScreenshotUrl(),
+                        project.getComments().size(),
+                        project.getLikes().size(),
+                        project.getViews().size(),
+                        project.getUser()))
+                .toList();
+
+        Map<String, Object> response = Map.of(
+                "content", responseContent,
+                "page", projectsPage.getNumber(),
+                "size", projectsPage.getSize(),
+                "totalElements", projectsPage.getTotalElements(),
+                "totalPages", projectsPage.getTotalPages(),
+                "last", projectsPage.isLast());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/user/{userId}")
@@ -103,12 +169,30 @@ public class ProjectController {
                     .body(Map.of("error", "User data is required"));
         }
 
+        // Fetch the user from the database
         User user = userRepository.findById(project.getUser().getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
+        // Set the user in the project
         project.setUser(user);
+
+        // Save the project to the database
         Project savedProject = projectRepository.save(project);
 
+        // Generate the screenshot
+        String path;
+        try {
+            path = generateScreenshot(savedProject);
+            savedProject.setScreenshotUrl(path);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to generate screenshot"));
+        }
+
+        // Save the project again with the updated screenshot URL
+        projectRepository.save(savedProject);
+
+        // Return the saved project as the response
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProject);
     }
 
@@ -122,11 +206,6 @@ public class ProjectController {
         }
 
         Project project = projectOpt.get();
-
-        // String path = generateScreenshot(projectDetails);
-
-        // updateProjectFields(project, projectDetails);
-        // Project updatedProject = projectRepository.save(project);
 
         if (projectDetails.getJs() != null)
             project.setJs(projectDetails.getJs());
@@ -145,17 +224,39 @@ public class ProjectController {
             project.setKey(null);
         }
 
+        String path = generateScreenshot(project);
+        project.setScreenshotUrl(path);
+
+        projectRepository.save(project);
+
         return ResponseEntity.ok(project);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProject(@PathVariable Long id) {
-        if (!projectRepository.existsById(id)) {
+        Optional<Project> projectOpt = projectRepository.findById(id);
+        if (projectOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("error", "Project not found"));
         }
 
+        Project project = projectOpt.get();
+
+        // Delete the screenshot if it exists
+        if (project.getScreenshotUrl() != null) {
+            try {
+                Path screenshotPath = Paths.get("server/src/main/resources/static/screenshots",
+                        project.getScreenshotUrl().replace("/screenshots/", ""));
+                Files.deleteIfExists(screenshotPath);
+                System.out.println("Screenshot deleted: " + screenshotPath);
+            } catch (Exception e) {
+                System.err.println("Failed to delete screenshot: " + e.getMessage());
+            }
+        }
+
+        // Delete the project from the database
         projectRepository.deleteById(id);
+
         return ResponseEntity.noContent().build();
     }
 
@@ -168,30 +269,10 @@ public class ProjectController {
         return null;
     }
 
-    private void updateProjectFields(Project project, Project details) {
-        if (details.getJs() != null)
-            project.setJs(details.getJs());
-        if (details.getCss() != null)
-            project.setCss(details.getCss());
-        if (details.getHtml() != null)
-            project.setHtml(details.getHtml());
-        if (details.getProjectName() != null)
-            project.setProjectName(details.getProjectName());
-
-        boolean wasPrivate = project.isPrivateFlag();
-        project.setPrivateFlag(details.isPrivateFlag());
-
-        if (details.isPrivateFlag() && !wasPrivate) {
-            project.setKey(Utils.createRandomKey(10));
-        } else if (!details.isPrivateFlag()) {
-            project.setKey(null);
-        }
-    }
-
     private String generateScreenshot(Project project) {
         try {
             // 1. Prepare full HTML
-            String fullHtml = "dfgdfgdfg";
+            String fullHtml = generateHtmlContent(project.getHtml(), project.getCss(), project.getJs());
 
             // 2. Paths inside your Spring Boot project
             Path staticDir = Paths.get("server/src/main/resources/static/screenshots");
@@ -237,5 +318,24 @@ public class ProjectController {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private String generateHtmlContent(String html, String css, String js) {
+        StringBuilder htmlBuilder = new StringBuilder();
+
+        htmlBuilder.append("<!DOCTYPE html>")
+                .append("<html>")
+                .append("<head>")
+                .append("<meta charset=\"UTF-8\">")
+                .append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">")
+                .append("<style>").append(css).append("</style>")
+                .append("</head>")
+                .append("<body>")
+                .append(html)
+                .append("<script>").append(js).append("</script>")
+                .append("</body>")
+                .append("</html>");
+
+        return htmlBuilder.toString();
     }
 }

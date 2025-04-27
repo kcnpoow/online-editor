@@ -19,13 +19,25 @@ export const DraftCard = ({ draft, deletable, onDelete }: ViewProps) => {
     onDelete?.();
   };
 
+  const handleImageError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>
+  ) => {
+    // Fallback to a default image when the main image fails to load
+    e.currentTarget.src =
+      'https://assets.codepen.io/416221/internal/screenshots/pens/PlMnOq.custom.png'; // Replace with your fallback image URL
+  };
+
   return (
     <Link
       className='relative p-4 pb-2 cursor-pointer'
       to={`/draft/${draft.id}`}
     >
       <div className='group peer relative z-10'>
-        <img src='https://assets.codepen.io/416221/internal/screenshots/pens/PlMnOq.custom.png' />
+        <img
+          src={`http://localhost:8080${draft.screenshotUrl}`}
+          onError={handleImageError} // Fallback on error
+          alt='Draft screenshot'
+        />
 
         <div className='flex items-center pt-2 mb-1'>
           <Avatar
@@ -53,7 +65,7 @@ export const DraftCard = ({ draft, deletable, onDelete }: ViewProps) => {
             <FaHeart /> 0
           </Chip>
           <Chip>
-            <FaCommentAlt /> 0
+            <FaCommentAlt /> {draft.commentsCount}
           </Chip>
           <Chip>
             <FaEye /> 0

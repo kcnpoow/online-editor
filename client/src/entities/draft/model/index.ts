@@ -10,6 +10,7 @@ export type Draft = {
   js: string;
   key: string | null;
   screenshotUrl: string;
+  commentsCount: number;
 };
 
 export type ViewProps = {

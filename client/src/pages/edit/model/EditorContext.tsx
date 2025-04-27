@@ -13,7 +13,6 @@ type EditorState = {
   css: string;
   js: string;
   output: string;
-  screenshot: string;
 };
 
 type EditorContextValue = {
@@ -38,7 +37,6 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
     css: '',
     js: '',
     output: '',
-    screenshot: '',
   });
 
   const navigate = useNavigate();
@@ -62,7 +60,7 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
 
   const handleSave = async (overrideValues?: Partial<EditorState>) => {
     if (!user) {
-      return navigate('/signin');
+      return navigate('/signin', { replace: true });
     }
 
     const currentValues = {
@@ -88,8 +86,6 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
     } else {
       result = await draftApi.createDraft(draft);
     }
-
-    console.log(result);
 
     setEditorValue('draftInfo', result);
   };

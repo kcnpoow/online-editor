@@ -1,5 +1,5 @@
 import { FormEvent, useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { FaLock, FaUser } from 'react-icons/fa';
 import { MdMail } from 'react-icons/md';
 
@@ -17,6 +17,8 @@ const initialFormData = {
 export const Signup = () => {
   const [formData, setFormData] = useState(initialFormData);
 
+  const navigate = useNavigate();
+
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -33,6 +35,8 @@ export const Signup = () => {
         formData.email,
         formData.password
       );
+
+      navigate('/signin', { replace: true });
     } finally {
     }
   };

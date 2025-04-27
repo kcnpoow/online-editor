@@ -24,7 +24,7 @@ export const Privacy = () => {
         />
 
         {editorValues.privateFlag && editorValues.draftInfo?.key && (
-          <Clipper>{`localhost:5173/edit?key=${editorValues.draftInfo.key}&draftId=${editorValues.draftInfo.id}`}</Clipper>
+          <Clipper className='mt-2'>{`localhost:5173/edit?key=${editorValues.draftInfo.key}&draftId=${editorValues.draftInfo.id}`}</Clipper>
         )}
       </SettingsArticle>
     </section>

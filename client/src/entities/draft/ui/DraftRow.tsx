@@ -29,7 +29,7 @@ export const DraftRow = ({ draft, deletable, onDelete }: ViewProps) => {
             <FaHeart /> 0
           </Chip>
           <Chip>
-            <FaCommentAlt /> 0
+            <FaCommentAlt /> {draft.commentsCount}
           </Chip>
           <Chip>
             <FaEye /> 0

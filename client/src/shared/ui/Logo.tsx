@@ -7,7 +7,7 @@ type Props = {
 export const Logo = ({ className }: Props) => {
   return (
     <Link to='/' className={className}>
-      Logo
+      Code Live
     </Link>
   );
 };

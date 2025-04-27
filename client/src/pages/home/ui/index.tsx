@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 
 import { CodeContainer } from './CodeContainer.tsx';
@@ -8,6 +8,8 @@ import { ImageListCard } from './ImageListCard.tsx';
 import { ListCard } from './ListCard.tsx';
 import { Button } from '@shared/ui/Button';
 import { useAuth } from '@shared/hooks/useAuth.tsx';
+import { DraftSortValues, PagedResponse } from '@shared/types/types.ts';
+import { Draft, draftApi, DraftCard } from '@entities/draft/index.ts';
 
 const titles = ['Support For the Way You Code', 'Keep Your Drafts Private'];
 
@@ -31,11 +33,27 @@ const images = [
 
 export const Home = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+
   const { user } = useAuth();
+
+  const [response, setResponse] = useState<PagedResponse<Draft>>();
 
   const handleClick = (index: number) => {
     setOpenIndex((prevIndex) => (prevIndex === index ? prevIndex : index));
   };
+
+  useEffect(() => {
+    (async () => {
+      const result = await draftApi.searchDrafts(
+        '',
+        0,
+        10,
+        DraftSortValues.CreatedDate
+      );
+
+      setResponse(result);
+    })();
+  }, []);
 
   return (
     <div className='py-15'>
@@ -131,8 +149,7 @@ export const Home = () => {
           <div className='max-md:min-h-full max-md:flex max-md:items-center'>
             <div>
               <h2 className='text-[1.8rem] leading-[1.2] font-normal mb-[10px]'>
-                Find inspiration from 1.8 million+ front-end designers and
-                developers.
+                Find inspiration from front-end designers and developers.
               </h2>
               <p className='text-[#c7c9d3] m-0 mb-4'>
                 Browse and share work from world-class designers and developers
@@ -141,11 +158,9 @@ export const Home = () => {
             </div>
           </div>
 
-          {/* <DraftCard />
-          <DraftCard />
-          <DraftCard />
-          <DraftCard />
-          <DraftCard /> */}
+          {response?.content.map((draft) => (
+            <DraftCard draft={draft} />
+          ))}
         </div>
 
         <div className='flex justify-center'>

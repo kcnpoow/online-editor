@@ -1,6 +1,7 @@
 import { Draft } from '../model';
 import { User } from '@entities/user';
 import BaseApi from '@shared/api/BaseApi';
+import { PagedResponse } from '@shared/types/types';
 
 interface CreateDraftRequest {
   user: User;
@@ -14,7 +15,7 @@ interface CreateDraftRequest {
 const api = new BaseApi('/projects');
 
 class DraftApi {
-  async getAllDrafts() {
+  async getAllDrafts(): Promise<PagedResponse<Draft>> {
     return api.get();
   }
 
@@ -26,7 +27,7 @@ class DraftApi {
     let url = `/${draftId}`;
 
     if (key) {
-      url += '?key=' + key;
+      url += `?key=${key}`;
     }
 
     return api.get(url);
@@ -44,8 +45,15 @@ class DraftApi {
     return api.delete('/' + draftId);
   }
 
-  async searchDrafts(query: string) {
-    return api.get('/search?query=' + query);
+  async searchDrafts(
+    query: string,
+    page: number,
+    size: number,
+    sortBy: string
+  ): Promise<PagedResponse<Draft>> {
+    return api.get(
+      `/search?query=${query}&page=${page}&size=${size}&sortBy=${sortBy}`
+    );
   }
 }
 

@@ -1,7 +1,6 @@
 package com.example.bdcodeeditor.config;
 
 import com.example.bdcodeeditor.lib.TokenFilter;
-import com.example.bdcodeeditor.services.UserService;
 
 import java.util.List;
 
@@ -13,7 +12,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,7 +26,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfigurator {
         private TokenFilter tokenFilter;
-        private UserService userService;
 
         public SecurityConfigurator() {
         }

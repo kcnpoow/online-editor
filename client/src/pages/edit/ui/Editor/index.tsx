@@ -103,7 +103,6 @@ export const Editor = () => {
           ref={iframeRef}
           width='100%'
           height='100%'
-          sandbox='allow-scripts'
           title='output'
           srcDoc={editorValues.output}
         />
